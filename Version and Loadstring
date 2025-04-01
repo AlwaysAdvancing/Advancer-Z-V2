@@ -1,0 +1,3 @@
+Version: 2.0
+
+Loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/Source%20Code",true))()
