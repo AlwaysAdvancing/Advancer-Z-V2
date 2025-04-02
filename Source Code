@@ -121,6 +121,15 @@ if Game == ArsenalID then
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
 	local PlayerSection = PlayerTab:CreateSection("Player")
 
+	local UserInputService = game:GetService("UserInputService")
+
+	if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and not UserInputService.MouseEnabled then
+		print("Mobile device")
+	elseif not UserInputService.TouchEnabled and UserInputService.KeyboardEnabled and UserInputService.MouseEnabled then
+		print("Computer device")
+	end
+
+
 	Rayfield:Notify({
 		Title = "Loaded",
 		Content = "Key Correct",
@@ -140,6 +149,26 @@ if Game == ArsenalID then
 	local targetPartOption = "Head"
 	local teamCheckEnabled = false
 	local sensitivity = 100
+
+	while UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and not UserInputService.MouseEnabled then do
+		while wait(0.2) do
+			if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+				local closestPlayer = getClosestPlayer()
+				if closestPlayer and closestPlayer.Character and closestPlayer.Character:FindFirstChild("HumanoidRootPart") then
+					camera.CameraType = Enum.CameraType.Scriptable
+					camera.CFrame = CFrame.new(LocalPlayer.Character.HumanoidRootPart.Position, closestPlayer.Character.HumanoidRootPart.Position)
+				end
+			end
+		end
+	end
+	local function toggleAimbot()
+		aimbotEnabled = not aimbotEnabled
+		if aimbotEnabled then
+			holdingBind = true
+			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+			UserInput
+		end
+	end
 
 	local fovCircle = Drawing.new("Circle")
 	fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
@@ -1559,7 +1588,7 @@ if Injected == false then
 
 	local PlayerSection = Tab:CreateSection("Player")
 
-	local AimTab = Window:CreateTab("Arsenal", 4483362458)
+	local AimTab = Window:CreateTab("Aimbot", 4483362458)
 
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
 	local PlayerSection = PlayerTab:CreateSection("Player")
