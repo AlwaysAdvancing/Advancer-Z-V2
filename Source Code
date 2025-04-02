@@ -39,10 +39,10 @@ if Game == ArsenalID then
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 	local Window = Rayfield:CreateWindow({
-		Name = "Advancer Z (Arsenal) (V 2.0)",
+		Name = "Advancer Z (Arsenal) (V 1.7)",
 		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 		LoadingTitle = "Advancer Z Load",
-		LoadingSubtitle = "by EinsteinV2 on Discord",
+		LoadingSubtitle = "by Ocean_Water on Discord",
 		Theme = {
 			TextColor = Color3.fromRGB(230, 230, 230),
 
@@ -90,7 +90,7 @@ if Game == ArsenalID then
 
 		ConfigurationSaving = {
 			Enabled = true,
-			FolderName = "AdvancerZ (Arsenal)",
+			FolderName = "AdvancerZ_V2 (Arsenal)",
 			FileName = "Save"
 		},
 
@@ -116,140 +116,10 @@ if Game == ArsenalID then
 
 	local PlayerSection = Tab:CreateSection("Player")
 
-	local SpeedyButton = Tab:CreateButton({
-		Name = "SpeedHack ",
-		Callback = function()
-			_G.WS = "100";
-			local Humanoid = game:GetService("Players").LocalPlayer.Character.Humanoid;
-			Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
-				Humanoid.WalkSpeed = _G.WS;
-			end)
-			Humanoid.WalkSpeed = _G.WS;
-		end,
-	})
+	local AimTab = Window:CreateTab("Arsenal", 4483362458)
 
-	local NOSpeedyButton = Tab:CreateButton({
-		Name = "Remove SpeedHack ",
-		Callback = function()
-			_G.WS = "16";
-		end,
-	})
-
-
-
-
-
-
-
-	local infjButton = Tab:CreateButton({
-		Name = "INF Jump ",
-		Callback = function()
-			local InfiniteJumpEnabled = true
-
-			game:GetService("UserInputService").JumpRequest:Connect(function()
-				if InfiniteJumpEnabled then
-					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
-				end
-			end)
-		end,
-	})
-
-	local FlyToggle = Tab:CreateToggle({
-		Name = "Fly",
-		CurrentValue = false,
-		Flag = "FlyToggle", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-		Callback = function(Value)
-			if Value == true then
-				startFly()
-			else 
-				endFly()
-			end
-		end,
-	})
-
-	local FlySInput = Tab:CreateInput({
-		Name = "Fly Speed",
-		CurrentValue = "50",
-		PlaceholderText = "Speed",
-		RemoveTextAfterFocusLost = false,
-		Flag = "Fly Speed",
-		Callback = function(Text)
-			while wait(0.2) do
-				flySettings = {flyspeed=Text}
-			end
-
-		end,
-	})
-
-	local VisualSection = Tab:CreateSection("Visuals")
-
-	local Button6 = Tab:CreateButton({
-		Name = "Maybe fix White screen",
-		Callback = function()
-			game.Players.LocalPlayer.Character.Humanoid.Health = 0
-		end,
-	})
-
-
-	local aj = loadstring(game:HttpGet("https://rawscript.vercel.app/api/raw/esp_1"))()
-
-	aj.Boxes = true
-	aj.Players = true
-	aj.TeamColor = true
-
-	local EnableESPBich = Tab:CreateToggle({
-		Name = "ESP",
-		CurrentValue = false,
-		Flag = "ESPEnable", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-		Callback = function(Value)
-			aj.Enabled = Value
-		end,
-	})
-
-	local ESPFaceCamera = Tab:CreateToggle({
-		Name = "ESP Face Camera",
-		CurrentValue = false,
-		Flag = "ESPFaceCamera", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-		Callback = function(Value)
-			aj.FaceCamera = Value
-		end,
-	})
-
-
-	local ESPTeamCheck = Tab:CreateToggle({
-		Name = "TeamCheck",
-		CurrentValue = false,
-		Flag = "ESP TeamCheck", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-		Callback = function(Value)
-			while wait(0.3) do
-				if Value == false then
-					aj.TeamMates = true
-				else
-					aj.TeamMates = false
-				end
-			end
-
-		end,
-	})
-
-	local ESPTRacersCheck = Tab:CreateToggle({
-		Name = "Tracers",
-		CurrentValue = false,
-		Flag = "ESP Tracers", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-		Callback = function(Value)
-			while wait() do 
-				aj.ESP.Tracers = Value
-				aj.Vis6 = Value
-			end
-		end,
-	})
-
-	Tab:CreateButton({Name="Name ESP",Callback=function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP"))();
-	end,
-	})
-
-	local MainSection = Tab:CreateSection("Arsenal")
+	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
+	local PlayerSection = PlayerTab:CreateSection("Player")
 
 	Rayfield:Notify({
 		Title = "Loaded",
@@ -337,7 +207,7 @@ if Game == ArsenalID then
 		end
 	end
 
-	local ToggleAimbot = Tab:CreateToggle({
+	local ToggleAimbot = AimTab:CreateToggle({
 		Name = "Aimbot",
 		CurrentValue = false,
 		Flag = "Toggle1",
@@ -346,7 +216,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local Keybind = Tab:CreateKeybind({
+	local Keybind = AimTab:CreateKeybind({
 		Name = "Aimbot Bind",
 		CurrentKeybind = "Q",
 		HoldToInteract = true,
@@ -359,7 +229,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local ToggleFOV = Tab:CreateToggle({
+	local ToggleFOV = AimTab:CreateToggle({
 		Name = "FOV Visibility",
 		CurrentValue = false,
 		Flag = "ToggleFOV",
@@ -369,7 +239,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local SliderFOV = Tab:CreateSlider({
+	local SliderFOV = AimTab:CreateSlider({
 		Name = "FOV Size",
 		Range = {10, 300},
 		Increment = 5,
@@ -382,7 +252,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local DropdownTarget = Tab:CreateDropdown({
+	local DropdownTarget = AimTab:CreateDropdown({
 		Name = "Target Part",
 		Options = {"Head", "Torso", "HumanoidRootPart", "Random"},
 		CurrentOption = "Head",
@@ -394,7 +264,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local ToggleTeamCheck = Tab:CreateToggle({
+	local ToggleTeamCheck = AimTab:CreateToggle({
 		Name = "Team Check",
 		CurrentValue = false,
 		Flag = "ToggleTeam",
@@ -403,7 +273,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local SliderSens = Tab:CreateSlider({
+	local SliderSens = AimTab:CreateSlider({
 		Name = "Sensitivity",
 		Range = {0, 100},
 		Increment = 1,
@@ -430,6 +300,176 @@ if Game == ArsenalID then
 			aimAtTarget()
 		end
 	end)
+
+
+
+
+
+
+
+	local INFToggle = Tab:CreateToggle({
+		Name = "INF Jump (BETA)",
+		CurrentValue = false,
+		Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			local InfiniteJumpEnabled = Value
+
+			game:GetService("UserInputService").JumpRequest:Connect(function()
+				if InfiniteJumpEnabled then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+				end
+			end)
+		end,
+	})
+
+	local FlyToggle = Tab:CreateToggle({
+		Name = "Fly",
+		CurrentValue = false,
+		Flag = "FlyToggle", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			if Value == true then
+				startFly()
+			else 
+				endFly()
+			end
+		end,
+	})
+
+	local Slider = Tab:CreateSlider({
+		Name = "Fly speed",
+		Range = {1, 555},
+		Increment = 10,
+		Suffix = "FlySpeed",
+		CurrentValue = 16,
+		Flag = "SliderFly", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait(0.2) do
+				flySettings = {flyspeed=Value}
+			end
+
+		end,
+	})
+	
+	local walkspeedEnabled
+	local freezeEnabled
+
+	local player = game.Players.LocalPlayer.Character
+
+
+	local WalkToggle = Tab:CreateToggle({
+		Name = "Toggle Walkspeed",
+		CurrentValue = false,
+		Flag = "Toggle91", 
+		Callback = function(Value)
+			walkspeedEnabled = Value
+			if walkspeedEnabled then
+				local humanoid = player.Character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = 16
+				end
+			else
+				local humanoid = player.Character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = 16
+				end
+			end
+		end,
+	})
+
+	local ToggleFreeze = Tab:CreateToggle({ 
+		Name = "Toggle Freeze",
+		CurrentValue = false,
+		Flag = "Toggle2",
+		Callback = function(Value)
+			freezeEnabled = Value
+			if freezeEnabled then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+			else
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+			end
+		end,
+	})
+
+	local WalkSpeedSlider = Tab:CreateSlider({
+		Name = "Toggle Walkspeed",
+		CurrentValue = 16,
+		Flag = "SliderRun", 
+		Callback = function(Value)
+			while walkspeedEnabled do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+			end
+		end,
+	})	
+
+
+	local VisualSection = Tab:CreateSection("Visuals")
+
+	local Button6 = Tab:CreateButton({
+		Name = "Maybe fix White screen",
+		Callback = function()
+			game.Players.LocalPlayer.Character.Humanoid.Health = 0
+		end,
+	})
+
+
+	local aj = loadstring(game:HttpGet("https://rawscript.vercel.app/api/raw/esp_1"))()
+
+	aj.Boxes = true
+	aj.Players = true
+	aj.TeamColor = true
+
+	local EnableESPBich = Tab:CreateToggle({
+		Name = "ESP",
+		CurrentValue = false,
+		Flag = "ESPEnable", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			aj.Enabled = Value
+		end,
+	})
+
+	local ESPFaceCamera = Tab:CreateToggle({
+		Name = "ESP Face Camera",
+		CurrentValue = false,
+		Flag = "ESPFaceCamera", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			aj.FaceCamera = Value
+		end,
+	})
+
+
+	local ESPTeamCheck = Tab:CreateToggle({
+		Name = "TeamCheck",
+		CurrentValue = false,
+		Flag = "ESP TeamCheck", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait(0.3) do
+				if Value == false then
+					aj.TeamMates = true
+				else
+					aj.TeamMates = false
+				end
+			end
+
+		end,
+	})
+
+	local ESPTRacersCheck = Tab:CreateToggle({
+		Name = "Tracers",
+		CurrentValue = false,
+		Flag = "ESP Tracers", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait() do 
+				aj.ESP.Tracers = Value
+				aj.Vis6 = Value
+			end
+		end,
+	})
+
+	Tab:CreateButton({Name="Name ESP",Callback=function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP"))();
+	end,
+	})
+
 
 	local function getplrsname()
 		for i, v in pairs(game:GetChildren()) do
@@ -477,7 +517,7 @@ if Game == ArsenalID then
 		end
 	end
 
-	Tab:CreateToggle({
+	AimTab:CreateToggle({
 		Name = "Toggle Silent Aim",
 		Callback = function()
 			enableSilentAim()
@@ -490,7 +530,7 @@ if Game == ArsenalID then
 		end
 	})
 
-	local AmmoButton = Tab:CreateButton({
+	local AmmoButton = AimTab:CreateButton({
 		Name = "Infinite Ammo",
 		Callback = function()
 			local replicationstorage = game.ReplicatedStorage
@@ -503,7 +543,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local RecoilButton = Tab:CreateButton({
+	local RecoilButton = AimTab:CreateButton({
 		Name = "No Recoil",
 		Callback = function()
 			local replicationstorage = game.ReplicatedStorage
@@ -523,7 +563,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local FRButton = Tab:CreateButton({
+	local FRButton = AimTab:CreateButton({
 		Name = "Firerate Mod",
 		Callback = function()
 			local replicationstorage = game.ReplicatedStorage
@@ -543,7 +583,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local RainbowButton = Tab:CreateButton({
+	local RainbowButton = AimTab:CreateButton({
 		Name = "Rainbow Gun",
 		Callback = function()
 			local c = 1
@@ -564,7 +604,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local NoRainbowButton = Tab:CreateButton({
+	local NoRainbowButton = AimTab:CreateButton({
 		Name = "Remove Rainbow Gun",
 		Callback = function()
 			local c = 1
@@ -670,7 +710,7 @@ if Game == ArsenalID then
 
 	local Create = InfoTab:CreateLabel("Creators", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
-	local CreateLabel = InfoTab:CreateLabel("Script Made By EinsteinV2 on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local UILabel = InfoTab:CreateLabel("UI Library: Rayfield  Made by Sirius", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
@@ -792,8 +832,6 @@ if Game == FortorID then
 
 
 
-
-
 	local Tab = Window:CreateTab("Main Stuff", "swords")
 
 	local ADMSection = Tab:CreateSection("Admin Scripts")
@@ -805,7 +843,304 @@ if Game == FortorID then
 		end,
 	})
 
+
+
+	local AimTab = Window:CreateTab("Aiming", 4483362458)
+
+	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
+	local PlayerSection = PlayerTab:CreateSection("Player")
+
+	Rayfield:Notify({
+		Title = "Loaded",
+		Content = "Key Correct",
+		Duration = 6.5,
+		Image = 4483362458,
+	})
+	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+	local UserInputService = game:GetService("UserInputService")
+	local LocalPlayer = Players.LocalPlayer
+	local camera = workspace.CurrentCamera
+
+	local aimbotEnabled = false
+	local holdingBind = false
+	local fovEnabled = false
+	local fovSize = 50
+	local targetPartOption = "Head"
+	local teamCheckEnabled = false
+	local sensitivity = 100
+
+	local fovCircle = Drawing.new("Circle")
+	fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
+	fovCircle.Thickness = 2
+	fovCircle.Transparency = 1
+	fovCircle.Visible = false
+	fovCircle.Radius = fovSize
+
+	local function getClosestPlayer()
+		local closestPlayer = nil
+		local shortestDistance = math.huge
+		local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+		local selectedPart = targetPartOption
+		if selectedPart == "Random" then
+			local parts = {"Head", "Torso", "HumanoidRootPart"}
+			selectedPart = parts[math.random(1, #parts)]
+		end
+
+		for _, player in ipairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(selectedPart) then
+				if teamCheckEnabled then
+					if LocalPlayer.Team and player.Team and LocalPlayer.Team == player.Team then
+						continue
+
+					end
+				end
+
+				local part = player.Character:FindFirstChild(selectedPart)
+				local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
+				if onScreen then
+					local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+					if (not fovEnabled) or (distance <= fovCircle.Radius) then
+						if distance < shortestDistance then
+							shortestDistance = distance
+							closestPlayer = player
+						end
+					end
+				end
+			end
+			continue
+
+		end
+		return closestPlayer
+	end
+
+	local function aimAtTarget()
+		local target = getClosestPlayer()
+		if target and target.Character then
+			local partName = targetPartOption
+			if partName == "Random" then
+				local parts = {"Head", "Torso", "HumanoidRootPart"}
+				partName = parts[math.random(1, #parts)]
+			end
+			local targetPart = target.Character:FindFirstChild(partName)
+			if targetPart then
+				local newCF = CFrame.new(camera.CFrame.Position, targetPart.Position)
+				if sensitivity <= 0 then
+					return
+				elseif sensitivity < 100 then
+					camera.CFrame = camera.CFrame:Lerp(newCF, sensitivity / 100)
+				else
+					camera.CFrame = newCF
+				end
+			end
+		end
+	end
+
+	local ToggleAimbot = AimTab:CreateToggle({
+		Name = "Aimbot",
+		CurrentValue = false,
+		Flag = "Toggle1",
+		Callback = function(Value)
+			aimbotEnabled = Value
+		end,
+	})
+
+	local Keybind = AimTab:CreateKeybind({
+		Name = "Aimbot Bind",
+		CurrentKeybind = "Q",
+		HoldToInteract = true,
+		Flag = "Keybind1",
+		Callback = function(isHolding)
+			holdingBind = isHolding
+			if holdingBind and aimbotEnabled then
+				aimAtTarget()
+			end
+		end,
+	})
+
+	local ToggleFOV = AimTab:CreateToggle({
+		Name = "FOV Visibility",
+		CurrentValue = false,
+		Flag = "ToggleFOV",
+		Callback = function(Value)
+			fovEnabled = Value
+			fovCircle.Visible = fovEnabled
+		end,
+	})
+
+	local SliderFOV = AimTab:CreateSlider({
+		Name = "FOV Size",
+		Range = {10, 300},
+		Increment = 5,
+		Suffix = "px",
+		CurrentValue = 50,
+		Flag = "SliderFOV",
+		Callback = function(Value)
+			fovSize = Value
+			fovCircle.Radius = fovSize
+		end,
+	})
+
+	local DropdownTarget = AimTab:CreateDropdown({
+		Name = "Target Part",
+		Options = {"Head", "Torso", "HumanoidRootPart", "Random"},
+		CurrentOption = "Head",
+
+		MultipleOptions = false,
+		Flag = "DropdownTarget",
+		Callback = function(Options)
+			targetPartOption = Options[1]
+		end,
+	})
+
+	local ToggleTeamCheck = AimTab:CreateToggle({
+		Name = "Team Check",
+		CurrentValue = false,
+		Flag = "ToggleTeam",
+		Callback = function(Value)
+			teamCheckEnabled = Value
+		end,
+	})
+
+	local SliderSens = AimTab:CreateSlider({
+		Name = "Sensitivity",
+		Range = {0, 100},
+		Increment = 1,
+		Suffix = "%",
+		CurrentValue = 100,
+		Flag = "SliderSens",
+		Callback = function(Value)
+			sensitivity = Value
+		end,
+	})
+
+	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+		if gameProcessedEvent then return end
+		if input.KeyCode == Enum.KeyCode.Q then
+			if aimbotEnabled then
+				aimAtTarget()
+			end
+		end
+	end)
+
+	RunService.RenderStepped:Connect(function()
+		fovCircle.Position = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+		if holdingBind and aimbotEnabled then
+			aimAtTarget()
+		end
+	end)
+
+
+
+
+
+
+
+	local INFToggle = PlayerTab:CreateToggle({
+		Name = "INF Jump (BETA)",
+		CurrentValue = false,
+		Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			local InfiniteJumpEnabled = Value
+
+			game:GetService("UserInputService").JumpRequest:Connect(function()
+				if InfiniteJumpEnabled then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+				end
+			end)
+		end,
+	})
+
+	local FlyToggle = PlayerTab:CreateToggle({
+		Name = "Fly",
+		CurrentValue = false,
+		Flag = "FlyToggle", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			if Value == true then
+				startFly()
+			else 
+				endFly()
+			end
+		end,
+	})
+
+	local Slider = PlayerTab:CreateSlider({
+		Name = "Fly speed",
+		Range = {1, 555},
+		Increment = 10,
+		Suffix = "FlySpeed",
+		CurrentValue = 16,
+		Flag = "SliderFly", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait(0.2) do
+				flySettings = {flyspeed=Value}
+			end
+
+		end,
+	})
+
+	local walkspeedEnabled
+	local freezeEnabled
+
+	local player = game.Players.LocalPlayer.Character
+
+
+	local WalkToggle = PlayerTab:CreateToggle({
+		Name = "Toggle Walkspeed",
+		CurrentValue = false,
+		Flag = "Toggle91", 
+		Callback = function(Value)
+			walkspeedEnabled = Value
+			if walkspeedEnabled then
+				local humanoid = player.Character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = 16
+				end
+			else
+				local humanoid = player.Character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = 16
+				end
+			end
+		end,
+	})
+
+	local WalkSpeedSlider = PlayerTab:CreateSlider({
+		Name = "Toggle Walkspeed",
+		CurrentValue = 16,
+		Flag = "SliderRun", 
+		Callback = function(Value)
+			while walkspeedEnabled do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+			end
+		end,
+	})	
+
+
+	local ToggleFreeze = PlayerTab:CreateToggle({ 
+		Name = "Toggle Freeze",
+		CurrentValue = false,
+		Flag = "Toggle2",
+		Callback = function(Value)
+			freezeEnabled = Value
+			if freezeEnabled then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+			else
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+			end
+		end,
+	})
+
+
+
 	local VisualSection = Tab:CreateSection("Visuals")
+
+	local Button6 = Tab:CreateButton({
+		Name = "Maybe fix White screen",
+		Callback = function()
+			game.Players.LocalPlayer.Character.Humanoid.Health = 0
+		end,
+	})
 
 
 	local aj = loadstring(game:HttpGet("https://rawscript.vercel.app/api/raw/esp_1"))()
@@ -813,10 +1148,9 @@ if Game == FortorID then
 	aj.Boxes = true
 	aj.Players = true
 	aj.TeamColor = true
-	aj.TeamMates = true
 
 	local EnableESPBich = Tab:CreateToggle({
-		Name = "Box ESP",
+		Name = "ESP",
 		CurrentValue = false,
 		Flag = "ESPEnable", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 		Callback = function(Value)
@@ -833,6 +1167,27 @@ if Game == FortorID then
 		end,
 	})
 
+
+	local ESPTeamCheck = Tab:CreateToggle({
+		Name = "TeamCheck",
+		CurrentValue = false,
+		Flag = "ESP TeamCheck", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait(0.3) do
+				if Value == false then
+					aj.TeamMates = true
+				else
+					aj.TeamMates = false
+				end
+			end
+
+		end,
+	})
+
+	Tab:CreateButton({Name="Name ESP",Callback=function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP"))();
+	end,
+	})
 
 
 
@@ -1142,7 +1497,7 @@ if Game == FortorID then
 
 	local Create = InfoTab:CreateLabel("Creators", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
-	local CreateLabel = InfoTab:CreateLabel("Script Made By EinsteinV2 on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local VapLabel = InfoTab:CreateLabel("Some features are made by Team Vaprix.cc(Secret kinda thing) fx. Silent Aim enable is.", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
@@ -1165,7 +1520,7 @@ if Injected == false then
 		Name = "Advancer Z (Universal) (V 1.7)",
 		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 		LoadingTitle = "Advancer Z Load",
-		LoadingSubtitle = "by VPX The_EinsteinV2 on Discord",
+		LoadingSubtitle = "by VPX The_Ocean_Water on Discord",
 		Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
 		DisableRayfieldPrompts = false,
@@ -1195,7 +1550,19 @@ if Injected == false then
 		}
 	})
 
-	local AimTab = ("Tab Example", "swords")
+
+
+
+
+
+	local Tab = Window:CreateTab("Main🔫", 4483362458) -- Title, Image
+
+	local PlayerSection = Tab:CreateSection("Player")
+
+	local AimTab = Window:CreateTab("Arsenal", 4483362458)
+
+	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
+	local PlayerSection = PlayerTab:CreateSection("Player")
 
 	Rayfield:Notify({
 		Title = "Loaded",
@@ -1379,35 +1746,122 @@ if Injected == false then
 
 
 
-	local Tab = Window:CreateTab("Main", "swords")
 
-	local ADMSection = Tab:CreateSection("Admin Scripts")
 
-	local IYButton = Tab:CreateButton({
-		Name = "Execute Infinite Yield (Admin Commands)",
-		Callback = function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source",true))()
+
+
+	local INFToggle = Tab:CreateToggle({
+		Name = "INF Jump (BETA)",
+		CurrentValue = false,
+		Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			local InfiniteJumpEnabled = Value
+
+			game:GetService("UserInputService").JumpRequest:Connect(function()
+				if InfiniteJumpEnabled then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+				end
+			end)
 		end,
 	})
 
+	local FlyToggle = Tab:CreateToggle({
+		Name = "Fly",
+		CurrentValue = false,
+		Flag = "FlyToggle", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			if Value == true then
+				startFly()
+			else 
+				endFly()
+			end
+		end,
+	})
+
+	local Slider = Tab:CreateSlider({
+		Name = "Fly speed",
+		Range = {1, 555},
+		Increment = 10,
+		Suffix = "FlySpeed",
+		CurrentValue = 16,
+		Flag = "SliderFly", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait(0.2) do
+				flySettings = {flyspeed=Value}
+			end
+
+		end,
+	})
+
+	local walkspeedEnabled
+	local freezeEnabled
+
+	local player = game.Players.LocalPlayer.Character
+
+
+	local WalkToggle = Tab:CreateToggle({
+		Name = "Toggle Walkspeed",
+		CurrentValue = false,
+		Flag = "Toggle91", 
+		Callback = function(Value)
+			walkspeedEnabled = Value
+			if walkspeedEnabled then
+				local humanoid = player.Character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = 16
+				end
+			else
+				local humanoid = player.Character:FindFirstChild("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = 16
+				end
+			end
+		end,
+	})
+
+	local ToggleFreeze = Tab:CreateToggle({ 
+		Name = "Toggle Freeze",
+		CurrentValue = false,
+		Flag = "Toggle2",
+		Callback = function(Value)
+			freezeEnabled = Value
+			if freezeEnabled then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+			else
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+			end
+		end,
+	})
+
+	local WalkSpeedSlider = Tab:CreateSlider({
+		Name = "Toggle Walkspeed",
+		CurrentValue = 16,
+		Flag = "SliderRun", 
+		Callback = function(Value)
+			while walkspeedEnabled do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+			end
+		end,
+	})	
+
+
 	local VisualSection = Tab:CreateSection("Visuals")
 
-
-
-
-
-	local PlayerTab = Window:CreateTab("Visuals", "eye")
-
-	local VisualSection = PlayerTab:CreateSection("ESP")
+	local Button6 = Tab:CreateButton({
+		Name = "Maybe fix White screen",
+		Callback = function()
+			game.Players.LocalPlayer.Character.Humanoid.Health = 0
+		end,
+	})
 
 
 	local aj = loadstring(game:HttpGet("https://rawscript.vercel.app/api/raw/esp_1"))()
 
 	aj.Boxes = true
 	aj.Players = true
+	aj.TeamColor = true
 
-
-	local EnableESPBich = PlayerTab:CreateToggle({
+	local EnableESPBich = Tab:CreateToggle({
 		Name = "ESP",
 		CurrentValue = false,
 		Flag = "ESPEnable", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
@@ -1416,7 +1870,7 @@ if Injected == false then
 		end,
 	})
 
-	local ESPFaceCamera = PlayerTab:CreateToggle({
+	local ESPFaceCamera = Tab:CreateToggle({
 		Name = "ESP Face Camera",
 		CurrentValue = false,
 		Flag = "ESPFaceCamera", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
@@ -1442,105 +1896,84 @@ if Injected == false then
 		end,
 	})
 
-	local ESPColor = PlayerTab:CreateColorPicker({
-		Name = "Box Color",
-		Color = Color3.fromRGB(nil,nil,nil),
-		Flag = "ESPcolor", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	local ESPTRacersCheck = Tab:CreateToggle({
+		Name = "Tracers",
+		CurrentValue = false,
+		Flag = "ESP Tracers", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 		Callback = function(Value)
-			while wait(0.7) do
-				aj.Color = Value
+			while wait() do 
+				aj.ESP.Tracers = Value
+				aj.Vis6 = Value
 			end
-
 		end,
 	})
 
-	PlayerTab:CreateButton({Name="Chams ESP",Callback=function()
-		local v29 = 0 + 0;
-		while true do
-			if (v29 == 0) then
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP"))();
-				break;
+	Tab:CreateButton({Name="Name ESP",Callback=function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP"))();
+	end,
+	})
+
+
+	local function getplrsname()
+		for i, v in pairs(game:GetChildren()) do
+			if v.ClassName == "Players" then
+				return v.Name
 			end
 		end
-	end});
+	end
 
-	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face") -- Title, Image
+	local SilentEnabled = false
 
-	local PlayerSection = PlayerTab:CreateSection("Player")
+	local function enableSilentAim()
+		SilentEnabled = not SilentEnabled
+		if SilentEnabled then
+			local players = getplrsname()
+			local plr = game[players].LocalPlayer
 
-	local SpeedyInput = PlayerTab:CreateInput({
-		Name = "WalkSpeed",
-		CurrentValue = "16",
-		PlaceholderText = "Speed",
-		RemoveTextAfterFocusLost = false,
-		Flag = "SpeedInput",
-		Callback = function(Text)
-			coroutine.wrap(function()
-				while true do
-					game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Text
-					wait(0.1)
+			coroutine.resume(coroutine.create(function()
+				while SilentEnabled and wait(1) do
+					coroutine.resume(coroutine.create(function()
+						for _, v in pairs(game[players]:GetPlayers()) do
+							if v.Name ~= plr.Name and v.Character then
+								v.Character.RightUpperLeg.CanCollide = false
+								v.Character.RightUpperLeg.Transparency = 10
+								v.Character.RightUpperLeg.Size = Vector3.new(14, 14, 14)
+
+								v.Character.LeftUpperLeg.CanCollide = false
+								v.Character.LeftUpperLeg.Transparency = 10
+								v.Character.LeftUpperLeg.Size = Vector3.new(14, 17, 17)
+
+								if v.Character:FindFirstChild("HeadHB") then
+									v.Character.HeadHB.CanCollide = false
+									v.Character.HeadHB.Transparency = 10
+									v.Character.HeadHB.Size = Vector3.new(17, 17, 17)
+								end
+
+								v.Character.HumanoidRootPart.CanCollide = false
+								v.Character.HumanoidRootPart.Transparency = 10
+								v.Character.HumanoidRootPart.Size = Vector3.new(14, 14, 14)
+							end
+						end
+					end))
 				end
-			end)()
+			end))
+		end
+	end
 
-		end,
-	})
-
-	local JumpInput = PlayerTab:CreateInput({
-		Name = "JumpPower",
-		CurrentValue = "50",
-		PlaceholderText = "Jump",
-		RemoveTextAfterFocusLost = false,
-		Flag = "JumpInput",
-		Callback = function(Text)
-			coroutine.wrap(function()
-				while true do
-					game.Players.LocalPlayer.Character.Humanoid.JumpPower = Text
-					wait(0.1)
-				end
-			end)()
-
-		end,
-	})
-
-	local infjButton = PlayerTab:CreateButton({
-		Name = "INF Jump ",
+	AimTab:CreateToggle({
+		Name = "Toggle Silent Aim",
 		Callback = function()
-			local InfiniteJumpEnabled = true
-
-			game:GetService("UserInputService").JumpRequest:Connect(function()
-				if InfiniteJumpEnabled then
-					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
-				end
-			end)
-		end,
+			enableSilentAim()
+			Rayfield:Notify({
+				Title = SilentEnabled and "Silent Aim Enabled" or "Silent Aim Disabled",
+				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
+				Duration = 5,
+				Image = 4483362458
+			})
+		end
 	})
 
-	local FlyToggle = PlayerTab:CreateToggle({
-		Name = "Fly",
-		CurrentValue = false,
-		Flag = "FlyToggle", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-		Callback = function(Value)
-			if Value == true then
-				startFly()
-			else 
-				endFly()
-			end
-		end,
-	})
 
-	local FlySInput = PlayerTab:CreateInput({
-		Name = "Fly Speed",
-		CurrentValue = "50",
-		PlaceholderText = "Speed",
-		RemoveTextAfterFocusLost = false,
-		Flag = "Speeput",
-		Callback = function(Text)
-			while wait(0.2) do
-				flySettings = {flyspeed=Text}
-			end
-
-		end,
-	})
 
 	local Button6 = PlayerTab:CreateButton({
 		Name = "Reset",
@@ -2861,7 +3294,9 @@ if Injected == false then
 
 	local Create = InfoTab:CreateLabel("Creators", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
-	local CreateLabel = InfoTab:CreateLabel("Script Made By EinsteinV2 on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+	local VapLabel = InfoTab:CreateLabel("Some features are made by Team Vaprix.cc(Secret kinda thing) fx. Silent Aim enable is.", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local UILabel = InfoTab:CreateLabel("UI Library: Rayfield  Made by Sirius", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
