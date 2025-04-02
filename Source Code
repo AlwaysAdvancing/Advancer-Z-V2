@@ -39,7 +39,7 @@ if Game == ArsenalID then
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 	local Window = Rayfield:CreateWindow({
-		Name = "Advancer Z (Arsenal) (V 1.7)",
+		Name = "Advancer Z (Arsenal) (V 2.0)",
 		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 		LoadingTitle = "Advancer Z Load",
 		LoadingSubtitle = "by Ocean_Water on Discord",
@@ -737,9 +737,9 @@ if Game == ArsenalID then
 
 	local ChangeTab = Window:CreateTab("ChangeLog", "scroll-text")
 
-	local OnepointSevenChange = ChangeTab:CreateLabel("V1.7 (RELEASE)", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+	local OnepointSevenChange = ChangeTab:CreateLabel("V2.0 (RELEASE)", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
-	local OnePointSevenLabel = ChangeTab:CreateLabel("V1.7: Added everything (RELEASE)", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+	local OnePointSevenLabel = ChangeTab:CreateLabel("V2.0: Added everything (RELEASE)", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 
 
@@ -756,7 +756,7 @@ if Game == FortorID then
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 	local Window = Rayfield:CreateWindow({
-		Name = "Advancer Z (Fortline) (V 1.7)",
+		Name = "Advancer Z (Fortline) (V 2.0)",
 		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 		LoadingTitle = "Advancer Z Load",
 		LoadingSubtitle = "by Einstein_V2 on Discord",
@@ -1517,7 +1517,7 @@ if Injected == false then
 	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 	local Window = Rayfield:CreateWindow({
-		Name = "Advancer Z (Universal) (V 1.7)",
+		Name = "Advancer Z (Universal) (V 2.0)",
 		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 		LoadingTitle = "Advancer Z Load",
 		LoadingSubtitle = "by VPX The_Ocean_Water on Discord",
@@ -1750,7 +1750,7 @@ if Injected == false then
 
 
 
-	local INFToggle = Tab:CreateToggle({
+	local INFToggle = PlayerTab:CreateToggle({
 		Name = "INF Jump (BETA)",
 		CurrentValue = false,
 		Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
@@ -1765,7 +1765,7 @@ if Injected == false then
 		end,
 	})
 
-	local FlyToggle = Tab:CreateToggle({
+	local FlyToggle = PlayerTab:CreateToggle({
 		Name = "Fly",
 		CurrentValue = false,
 		Flag = "FlyToggle", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
@@ -1778,7 +1778,7 @@ if Injected == false then
 		end,
 	})
 
-	local Slider = Tab:CreateSlider({
+	local Slider = PlayerTab:CreateSlider({
 		Name = "Fly speed",
 		Range = {1, 555},
 		Increment = 10,
@@ -1799,7 +1799,33 @@ if Injected == false then
 	local player = game.Players.LocalPlayer.Character
 
 
-	local WalkToggle = Tab:CreateToggle({
+
+	local ToggleFreeze = PlayerTab:CreateToggle({ 
+		Name = "Toggle Freeze",
+		CurrentValue = false,
+		Flag = "Toggle2",
+		Callback = function(Value)
+			freezeEnabled = Value
+			if freezeEnabled then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+			else
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+			end
+		end,
+	})
+
+	local WalkSpeedSlider = PlayerTab:CreateSlider({
+		Name = "Toggle Walkspeed",
+		CurrentValue = 16,
+		Flag = "SliderRun", 
+		Callback = function(Value)
+			while walkspeedEnabled do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+			end
+		end,
+	})	
+
+	local WalkToggle = PlayerTab:CreateToggle({
 		Name = "Toggle Walkspeed",
 		CurrentValue = false,
 		Flag = "Toggle91", 
@@ -1819,33 +1845,8 @@ if Injected == false then
 		end,
 	})
 
-	local ToggleFreeze = Tab:CreateToggle({ 
-		Name = "Toggle Freeze",
-		CurrentValue = false,
-		Flag = "Toggle2",
-		Callback = function(Value)
-			freezeEnabled = Value
-			if freezeEnabled then
-				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-			else
-				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-			end
-		end,
-	})
 
-	local WalkSpeedSlider = Tab:CreateSlider({
-		Name = "Toggle Walkspeed",
-		CurrentValue = 16,
-		Flag = "SliderRun", 
-		Callback = function(Value)
-			while walkspeedEnabled do
-				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-			end
-		end,
-	})	
-
-
-	local VisualSection = Tab:CreateSection("Visuals")
+	local VisTab = Rayfield
 
 	local Button6 = Tab:CreateButton({
 		Name = "Maybe fix White screen",
