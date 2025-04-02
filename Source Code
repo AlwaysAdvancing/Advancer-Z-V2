@@ -114,9 +114,105 @@ if Game == ArsenalID then
 
 	local Tab = Window:CreateTab("Main🔫", 4483362458) -- Title, Image
 
+	local AmmoButton = Tab:CreateButton({
+		Name = "Infinite Ammo",
+		Callback = function()
+			local replicationstorage = game.ReplicatedStorage
+
+			while wait() do
+				game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
+				game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
+			end
+
+		end,
+	})
+
+	local RecoilButton = Tab:CreateButton({
+		Name = "No Recoil",
+		Callback = function()
+			local replicationstorage = game.ReplicatedStorage
+
+			while wait(5) do
+
+				for i, v in pairs(replicationstorage.Weapons:GetDescendants()) do
+					if v.Name == "RecoilControl" then
+						v.Value = 0
+					end
+					if v.Name == "MaxSpread" then
+						v.Value = 0
+					end
+				end
+			end
+
+		end,
+	})
+
+	local FRButton = Tab:CreateButton({
+		Name = "Firerate Mod",
+		Callback = function()
+			local replicationstorage = game.ReplicatedStorage
+
+			while wait(5) do
+
+				for i, v in pairs(replicationstorage.Weapons:GetDescendants()) do
+					if v.Name == "Auto" then
+						v.Value = true
+					end
+					if v.Name == "FireRate" then
+						v.Value = 0.02
+					end
+				end
+			end
+
+		end,
+	})
+
+	local RainbowButton = Tab:CreateButton({
+		Name = "Rainbow Gun",
+		Callback = function()
+			local c = 1
+			function zigzag(X)
+				return math.acos(math.cos(X * math.pi)) / math.pi
+			end
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if game.Workspace.Camera:FindFirstChild('Arms') then
+					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
+						if v.ClassName == 'MeshPart' then 
+							v.Color = Color3.fromHSV(zigzag(c),1,1)
+							c = c + .0001
+						end
+					end
+				end
+			end)
+
+		end,
+	})
+
+	local NoRainbowButton = Tab:CreateButton({
+		Name = "Remove Rainbow Gun",
+		Callback = function()
+			local c = 1
+			function zigzag(X)
+				return math.acos(math.cos(X * math.pi)) / math.pi
+			end
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if game.Workspace.Camera:FindFirstChild('Arms') then
+					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
+						if v.ClassName == 'MeshPart' then 
+							v.Color = Color3.fromHSV(zigzag(c),1,1)
+							c = c - .0001
+						end
+					end
+				end
+			end)
+
+		end,
+	})
+
+
 	local PlayerSection = Tab:CreateSection("Player")
 
-	local AimTab = Window:CreateTab("Arsenal", 4483362458)
+	local AimTab = Window:CreateTab("Aim", 4483362458)
 
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
 	local PlayerSection = PlayerTab:CreateSection("Player")
@@ -216,15 +312,63 @@ if Game == ArsenalID then
 		end,
 	})
 
+	local function getplrsname()
+		for i, v in pairs(game:GetChildren()) do
+			if v.ClassName == "Players" then
+				return v.Name
+			end
+		end
+	end
 
-	local ToggleTeamAimbot = AimTab:CreateToggle({
-		Name = "Aimbot",
-		CurrentValue = false,
-		Flag = "Toggle1",
-		Callback = function(Value)
-			
+	local SilentEnabled = false
 
-		end,
+	local function enableSilentAim()
+		SilentEnabled = not SilentEnabled
+		if SilentEnabled then
+			local players = getplrsname()
+			local plr = game[players].LocalPlayer
+
+			coroutine.resume(coroutine.create(function()
+				while SilentEnabled and wait(1) do
+					coroutine.resume(coroutine.create(function()
+						for _, v in pairs(game[players]:GetPlayers()) do
+							if v.Name ~= plr.Name and v.Character then
+								v.Character.RightUpperLeg.CanCollide = false
+								v.Character.RightUpperLeg.Transparency = 10
+								v.Character.RightUpperLeg.Size = Vector3.new(14, 14, 14)
+
+								v.Character.LeftUpperLeg.CanCollide = false
+								v.Character.LeftUpperLeg.Transparency = 10
+								v.Character.LeftUpperLeg.Size = Vector3.new(14, 17, 17)
+
+								if v.Character:FindFirstChild("HeadHB") then
+									v.Character.HeadHB.CanCollide = false
+									v.Character.HeadHB.Transparency = 10
+									v.Character.HeadHB.Size = Vector3.new(17, 17, 17)
+								end
+
+								v.Character.HumanoidRootPart.CanCollide = false
+								v.Character.HumanoidRootPart.Transparency = 10
+								v.Character.HumanoidRootPart.Size = Vector3.new(14, 14, 14)
+							end
+						end
+					end))
+				end
+			end))
+		end
+	end
+
+	AimTab:CreateToggle({
+		Name = "Toggle Silent Aim",
+		Callback = function()
+			enableSilentAim()
+			Rayfield:Notify({
+				Title = SilentEnabled and "Silent Aim Enabled" or "Silent Aim Disabled",
+				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
+				Duration = 5,
+				Image = 4483362458
+			})
+		end
 	})
 
 
@@ -543,100 +687,7 @@ if Game == ArsenalID then
 		end
 	})
 
-	local AmmoButton = AimTab:CreateButton({
-		Name = "Infinite Ammo",
-		Callback = function()
-			local replicationstorage = game.ReplicatedStorage
 
-			while wait() do
-				game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
-				game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
-			end
-
-		end,
-	})
-
-	local RecoilButton = AimTab:CreateButton({
-		Name = "No Recoil",
-		Callback = function()
-			local replicationstorage = game.ReplicatedStorage
-
-			while wait(5) do
-
-				for i, v in pairs(replicationstorage.Weapons:GetDescendants()) do
-					if v.Name == "RecoilControl" then
-						v.Value = 0
-					end
-					if v.Name == "MaxSpread" then
-						v.Value = 0
-					end
-				end
-			end
-
-		end,
-	})
-
-	local FRButton = AimTab:CreateButton({
-		Name = "Firerate Mod",
-		Callback = function()
-			local replicationstorage = game.ReplicatedStorage
-
-			while wait(5) do
-
-				for i, v in pairs(replicationstorage.Weapons:GetDescendants()) do
-					if v.Name == "Auto" then
-						v.Value = true
-					end
-					if v.Name == "FireRate" then
-						v.Value = 0.02
-					end
-				end
-			end
-
-		end,
-	})
-
-	local RainbowButton = AimTab:CreateButton({
-		Name = "Rainbow Gun",
-		Callback = function()
-			local c = 1
-			function zigzag(X)
-				return math.acos(math.cos(X * math.pi)) / math.pi
-			end
-			game:GetService("RunService").RenderStepped:Connect(function()
-				if game.Workspace.Camera:FindFirstChild('Arms') then
-					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-						if v.ClassName == 'MeshPart' then 
-							v.Color = Color3.fromHSV(zigzag(c),1,1)
-							c = c + .0001
-						end
-					end
-				end
-			end)
-
-		end,
-	})
-
-	local NoRainbowButton = AimTab:CreateButton({
-		Name = "Remove Rainbow Gun",
-		Callback = function()
-			local c = 1
-			function zigzag(X)
-				return math.acos(math.cos(X * math.pi)) / math.pi
-			end
-			game:GetService("RunService").RenderStepped:Connect(function()
-				if game.Workspace.Camera:FindFirstChild('Arms') then
-					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-						if v.ClassName == 'MeshPart' then 
-							v.Color = Color3.fromHSV(zigzag(c),1,1)
-							c = c - .0001
-						end
-					end
-				end
-			end)
-
-		end,
-	})
 
 	local SettingTab = Window:CreateTab("Settings", "settings")
 
