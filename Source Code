@@ -121,9 +121,6 @@ if Game == ArsenalID then
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
 	local PlayerSection = PlayerTab:CreateSection("Player")
 
-
-
-
 	Rayfield:Notify({
 		Title = "Loaded",
 		Content = "Key Correct",
@@ -143,8 +140,6 @@ if Game == ArsenalID then
 	local targetPartOption = "Head"
 	local teamCheckEnabled = false
 	local sensitivity = 100
-
-	
 
 	local fovCircle = Drawing.new("Circle")
 	fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
