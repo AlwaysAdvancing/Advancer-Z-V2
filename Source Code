@@ -1195,7 +1195,7 @@ if Injected == false then
 		}
 	})
 
-local AimTab = Rayfield:CreateTab
+	local AimTab = ("Tab Example", "swords")
 
 	Rayfield:Notify({
 		Title = "Loaded",
