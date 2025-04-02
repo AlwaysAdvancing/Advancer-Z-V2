@@ -150,11 +150,6 @@ if Game == ArsenalID then
 	local teamCheckEnabled = false
 	local sensitivity = 100
 
-	while UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and not UserInputService.MouseEnabled then do
-		while wait(0.2) do
-			holdingBind = true
-		end
-	end
 	
 
 	local fovCircle = Drawing.new("Circle")
