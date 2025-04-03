@@ -384,22 +384,6 @@ if Game == ArsenalID then
 			end
 		end,
 	})
-
-	local AimTeamCheck = AimTab:CreateToggle({
-		Name = "Team Check",
-		CurrentValue = false,
-		Flag = "ToggleTeamAim",
-		Callback = function(Value)
-			teamCheckEnabled = Value
-			if teamCheckEnabled then
-				game.Players.LocalPlayer.TeamChanged:Connect(function()
-					updateTarget()
-				end)
-				updateTarget()
-			end
-		end,
-	})
-
 	local ToggleFOV = AimTab:CreateToggle({
 		Name = "FOV Visibility",
 		CurrentValue = false,
@@ -409,10 +393,9 @@ if Game == ArsenalID then
 			fovCircle.Visible = fovEnabled
 		end,
 	})
-
 	local SliderFOV = AimTab:CreateSlider({
 		Name = "FOV Size",
-		Range = {10, 300},
+		Range = {10, 360},
 		Increment = 5,
 		Suffix = "px",
 		CurrentValue = 50,
@@ -422,7 +405,7 @@ if Game == ArsenalID then
 			fovCircle.Radius = fovSize
 		end,
 	})
-
+	
 	local DropdownTarget = AimTab:CreateDropdown({
 		Name = "Target Part",
 		Options = {"Head", "Torso", "HumanoidRootPart", "Random"},
@@ -514,10 +497,27 @@ if Game == ArsenalID then
 		end,
 	})
 	
-	local walkspeedEnabled
-	local freezeEnabled
+	local walkspeedEnabled = false
+	local freezeEnabled = false
 
 	local player = game.Players.LocalPlayer.Character
+
+	local WalkSpeedSlider = Tab:CreateSlider({
+		Range = {16, 1234},
+		Increment = 10,
+		Suffix = "WalkSpeed",
+		CurrentValue = 16,
+		Flag = "SliderRun", 
+		Callback = function(Value)
+			while walkspeedEnabled do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+			end
+			while walkspeedEnabled == false do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+			end
+		end,
+	})	
+
 
 
 	local WalkToggle = Tab:CreateToggle({
@@ -526,17 +526,6 @@ if Game == ArsenalID then
 		Flag = "Toggle91", 
 		Callback = function(Value)
 			walkspeedEnabled = Value
-			if walkspeedEnabled then
-				local humanoid = player.Character:FindFirstChild("Humanoid")
-				if humanoid then
-					humanoid.WalkSpeed = 16
-				end
-			else
-				local humanoid = player.Character:FindFirstChild("Humanoid")
-				if humanoid then
-					humanoid.WalkSpeed = 16
-				end
-			end
 		end,
 	})
 
@@ -554,16 +543,6 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local WalkSpeedSlider = Tab:CreateSlider({
-		Name = "Toggle Walkspeed",
-		CurrentValue = 16,
-		Flag = "SliderRun", 
-		Callback = function(Value)
-			while walkspeedEnabled do
-				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-			end
-		end,
-	})	
 
 
 	local VisualSection = Tab:CreateSection("Visuals")
