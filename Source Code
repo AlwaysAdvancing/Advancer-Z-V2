@@ -1,18 +1,4 @@
 
-
-
--- u guys unfortunantelly cannot see the source code alr?
-
-
-
-
-
-
-
-
--- source code :
-
-
 local Game = game.GameId
 local ArsenalID = 111958650
 local FortorID = 4948814458
@@ -358,7 +344,7 @@ if Game == ArsenalID then
 		end
 	end
 
-	AimTab:CreateToggle({
+	local SilentToggle = AimTab:CreateToggle({
 		Name = "Toggle Silent Aim",
 		Callback = function()
 			enableSilentAim()
@@ -374,7 +360,7 @@ if Game == ArsenalID then
 
 
 	local MobileAim = AimTab:CreateToggle({
-		Name = "Enable on Mobile",
+		Name = "Aimbot Enable on Mobile",
 		CurrentValue = false,
 		Flag = "MobileAimbot", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 		Callback = function(isHolding)
@@ -395,6 +381,18 @@ if Game == ArsenalID then
 			holdingBind = isHolding
 			if holdingBind and aimbotEnabled then
 				aimAtTarget()
+			end
+		end,
+	})
+
+	local AimTeamCheck = AimTab:CreateToggle({
+		Name = "Team Check",
+		CurrentValue = false,
+		Flag = "ToggleTeamAim",
+		Callback = function(Value)
+			aimbotTeam = Value
+			if Value then
+				teamCheck()
 			end
 		end,
 	})
