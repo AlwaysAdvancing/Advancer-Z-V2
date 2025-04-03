@@ -196,8 +196,6 @@ if Game == ArsenalID then
 	})
 
 
-	local PlayerSection = Tab:CreateSection("Player")
-
 	local AimTab = Window:CreateTab("Aim", 4483362458)
 
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
@@ -502,7 +500,7 @@ if Game == ArsenalID then
 
 	local player = game.Players.LocalPlayer.Character
 
-	local WalkSpeedSlider = Tab:CreateSlider({
+	local WalkSpeedSlider = PlayerTab:CreateSlider({
 		Range = {16, 1234},
 		Increment = 10,
 		Suffix = "WalkSpeed",
@@ -520,7 +518,7 @@ if Game == ArsenalID then
 
 
 
-	local WalkToggle = Tab:CreateToggle({
+	local WalkToggle = PlayerTab:CreateToggle({
 		Name = "Toggle Walkspeed",
 		CurrentValue = false,
 		Flag = "Toggle91", 
