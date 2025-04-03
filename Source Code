@@ -390,9 +390,12 @@ if Game == ArsenalID then
 		CurrentValue = false,
 		Flag = "ToggleTeamAim",
 		Callback = function(Value)
-			aimbotTeam = Value
-			if Value then
-				teamCheck()
+			teamCheckEnabled = Value
+			if teamCheckEnabled then
+				game[players].LocalPlayer.TeamChanged:Connect(function()
+					updateTarget()
+				end)
+				updateTarget()
 			end
 		end,
 	})
