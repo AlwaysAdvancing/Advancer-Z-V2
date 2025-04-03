@@ -22,7 +22,7 @@ if Game == ArsenalID then
 
 	Injected = true
 
-	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
 
 	local Window = Rayfield:CreateWindow({
 		Name = "Advancer Z (Arsenal) (V 2.0)",
@@ -795,7 +795,7 @@ if Game == FortorID then
 
 	Injected = true
 
-	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
 
 	local Window = Rayfield:CreateWindow({
 		Name = "Advancer Z (Fortline) (V 2.0)",
@@ -1556,7 +1556,7 @@ end
 if Injected == false then
 
 
-	local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
 
 	local Window = Rayfield:CreateWindow({
 		Name = "Advancer Z (Universal) (V 2.0)",
