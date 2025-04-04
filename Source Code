@@ -164,7 +164,7 @@ if Game == ArsenalID then
 		CurrentValue = false,
   		Flag = "ToggleRainbow", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    		Callback = function(Value)
-			while Value == true do
+			if Value == true then do
 			local c = 1
 			function zigzag(X)
 				return math.acos(math.cos(X * math.pi)) / math.pi
@@ -180,7 +180,7 @@ if Game == ArsenalID then
 				end
 			end
 
-			while Value == true do
+			if Value == false then do
 			local c = 1
 			function zigzag(X)
 				return math.acos(math.cos(X * math.pi)) / math.pi
