@@ -159,9 +159,11 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local RainbowButton = Tab:CreateToggle({
-		Name = "Rainbow Gun",
-		Callback = function()
+local ToggleRainbow = Tab:CreateToggle({
+   Name = "Rainbow Gun",
+   CurrentValue = false,
+   Flag = "ToggleRainbow", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
 			while Value == true do
 			local c = 1
 			function zigzag(X)
@@ -195,26 +197,6 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local NoRainbowButton = Tab:CreateButton({
-		Name = "Remove Rainbow Gun",
-		Callback = function()
-			local c = 1
-			function zigzag(X)
-				return math.acos(math.cos(X * math.pi)) / math.pi
-			end
-			game:GetService("RunService").RenderStepped:Connect(function()
-				if game.Workspace.Camera:FindFirstChild('Arms') then
-					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-						if v.ClassName == 'MeshPart' then 
-							v.Color = Color3.fromHSV(zigzag(c),1,1)
-							c = c - .0001
-						end
-					end
-				end
-			end)
-
-		end,
-	})
 
 
 	local AimTab = Window:CreateTab("Aim", 4483362458)
@@ -222,12 +204,6 @@ if Game == ArsenalID then
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
 	local PlayerSection = PlayerTab:CreateSection("Player")
 
-	Rayfield:Notify({
-		Title = "Loaded",
-		Content = "Key Correct",
-		Duration = 6.5,
-		Image = 4483362458,
-	})
 	local RunService = game:GetService("RunService")
 	local Players = game:GetService("Players")
 	local UserInputService = game:GetService("UserInputService")
@@ -470,54 +446,6 @@ if Game == ArsenalID then
 
 
 
-local teamCheckEnabled = false -- New variable for team checking
-
-local TeamCheckToggle = AimTab:CreateToggle({
-   Name = "Team Check",
-   CurrentValue = false,
-   Flag = "TeamCheck",
-   Callback = function(Value)
-	while Value == true do
-	print("LocalPlayer Team: ", LocalPlayer.Team)
-	print("Target Player Team: ", player.Team)
-	end
-       teamCheckEnabled = Value
-       print("Team Check Enabled:", teamCheckEnabled) -- Debugging line
-   end,
-})
-local function getClosestPlayer()
-    local closestPlayer = nil
-    local shortestDistance = math.huge
-    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
-    local selectedPart = targetPartOption
-    if selectedPart == "Random" then
-        local parts = {"Head", "Torso", "HumanoidRootPart"}
-        selectedPart = parts[math.random(1, #parts)]
-    end
-
-    for _, player in ipairs(Players:GetPlayers()) do
-        -- Check if player is not the local player and has a character
-        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(selectedPart) then
-            -- Use teamCheckEnabled to filter out teammates
-            if teamCheckEnabled and LocalPlayer.Team and player.Team and LocalPlayer.Team == player.Team then
-                continue -- Skip teammates if the toggle is enabled
-            end
-            
-            local part = player.Character:FindFirstChild(selectedPart)
-            local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
-            if onScreen then
-                local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
-                if (not fovEnabled) or (distance <= fovCircle.Radius) then
-                    if distance < shortestDistance then
-                        shortestDistance = distance
-                        closestPlayer = player
-                    end
-                end
-            end
-        end
-    end
-    return closestPlayer
-end
 
 
 
