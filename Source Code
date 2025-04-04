@@ -178,7 +178,8 @@ local ToggleRainbow = Tab:CreateToggle({
 					end
 				end
 			end
-		end)
+		end
+	end
 	while Value == true do
 	local c = 1
 	function zigzag(X)
@@ -193,7 +194,7 @@ local ToggleRainbow = Tab:CreateToggle({
 					end
 				end
 			end
-		end)
+		end
 	end,
 })
 
