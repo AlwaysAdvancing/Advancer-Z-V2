@@ -103,7 +103,7 @@ if Game == ArsenalID then
 	local Tab = Window:CreateTab("Main🔫", 4483362458) -- Title, Image
 
 
-
+	local GunSection = Tab:CreateSection("Gun Mods")
 
 
 	local AmmoButton = Tab:CreateButton({
@@ -159,49 +159,6 @@ if Game == ArsenalID then
 		end,
 	})
 
-local ToggleRainbow = Tab:CreateToggle({
-    Name = "Rainbow Gun",
-    CurrentValue = false,
-    Flag = "ToggleRainbow", 
-    Callback = function(Values)
-        local c = 1
-        local function zigzag(X)
-            return math.acos(math.cos(X * math.pi)) / math.pi
-        end
-        
-        local rainbowConnection -- This will hold the connection to the RenderStepped
-
-        if Value then
-            -- Start rainbow update
-            rainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
-                if game.Workspace.Camera:FindFirstChild('Arms') then
-                    for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-                        if v:IsA('MeshPart') then 
-                            v.Color = Color3.fromHSV(zigzag(c), 1, 1)
-                            c = c + 0.001 -- Increment c to change color over time
-                        end
-                    end
-                end
-            end)
-        else
-            -- Stop rainbow update
-            if rainbowConnection then
-                rainbowConnection:Disconnect() -- Disconnect to stop the effect
-                rainbowConnection = nil
-            end
-
-            -- Optionally, you can reset the color when toggled off
-            if game.Workspace.Camera:FindFirstChild('Arms') then
-                for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-                    if v:IsA('MeshPart') then 
-                        v.Color = Color3.new(1, 1, 1) -- Set to original color or any color you want
-                    end
-                end
-            end
-        end
-    end,
-})
-
 local ToggleCrazyRainbow = Tab:CreateToggle({
     Name = "Rainbow Gun(Crazy mode)",
     CurrentValue = false,
@@ -246,7 +203,37 @@ local ToggleCrazyRainbow = Tab:CreateToggle({
     end,
 })
 
+local GunDivider = Tab:CreateDivider()
 
+local Section = Tab:CreateSection("LocalPlayer")
+
+local WalkEnabled = false 
+
+local WalkToggle = Tab:CreateToggle({
+	Name = "Enable Walkspeed",
+	CurrentValue = false,
+	Flag = "WalkToggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(WalkValue)
+	WalkEnabled = WalkValue
+	while Value do 
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+	end,
+ })
+
+local WalkSlider = Tab:CreateSlider({
+	Name = "WalkSpeed",
+	Range = {16, 999},
+	Increment = 10,
+	Suffix = "Speed",
+	CurrentValue = 16,
+	Flag = "WalkSpeedSlider", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(Value)
+	while WalkEnabled do 
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+	while WalkEnabled == false do 
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+	end,
+ })
 
 	local AimTab = Window:CreateTab("Aim", 4483362458)
 
