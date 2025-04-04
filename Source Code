@@ -457,6 +457,10 @@ local TeamCheckToggle = AimTab:CreateToggle({
    CurrentValue = false,
    Flag = "TeamCheck",
    Callback = function(Value)
+	while Value == true do
+	print("LocalPlayer Team: ", LocalPlayer.Team)
+	print("Target Player Team: ", player.Team)
+	end
        teamCheckEnabled = Value
        print("Team Check Enabled:", teamCheckEnabled) -- Debugging line
    end,
