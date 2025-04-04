@@ -11,11 +11,10 @@
             else
                 print(player.Name .. " is an enemy.") -- This player can be aimed at
             end
-        end
     end
 end
-		end,
-	})
+	end,
+})
 
 
 
