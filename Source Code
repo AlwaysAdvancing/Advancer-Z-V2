@@ -163,6 +163,49 @@ local ToggleRainbow = Tab:CreateToggle({
     Name = "Rainbow Gun",
     CurrentValue = false,
     Flag = "ToggleRainbow", 
+    Callback = function(Values)
+        local c = 1
+        local function zigzag(X)
+            return math.acos(math.cos(X * math.pi)) / math.pi
+        end
+        
+        local rainbowConnection -- This will hold the connection to the RenderStepped
+
+        if Value then
+            -- Start rainbow update
+            rainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                if game.Workspace.Camera:FindFirstChild('Arms') then
+                    for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
+                        if v:IsA('MeshPart') then 
+                            v.Color = Color3.fromHSV(zigzag(c), 1, 1)
+                            c = c + 0.001 -- Increment c to change color over time
+                        end
+                    end
+                end
+            end)
+        else
+            -- Stop rainbow update
+            if rainbowConnection then
+                rainbowConnection:Disconnect() -- Disconnect to stop the effect
+                rainbowConnection = nil
+            end
+
+            -- Optionally, you can reset the color when toggled off
+            if game.Workspace.Camera:FindFirstChild('Arms') then
+                for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
+                    if v:IsA('MeshPart') then 
+                        v.Color = Color3.new(1, 1, 1) -- Set to original color or any color you want
+                    end
+                end
+            end
+        end
+    end,
+})
+
+local ToggleCrazyRainbow = Tab:CreateToggle({
+    Name = "Rainbow Gun(Crazy mode)",
+    CurrentValue = false,
+    Flag = "ToggleCrazyRainbow", 
     Callback = function(Value)
         local c = 1
         local function zigzag(X)
@@ -172,6 +215,7 @@ local ToggleRainbow = Tab:CreateToggle({
         local rainbowConnection -- This will hold the connection to the RenderStepped
 
         if Value then
+            Values = false
             -- Start rainbow update
             rainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
                 if game.Workspace.Camera:FindFirstChild('Arms') then
