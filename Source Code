@@ -19,11 +19,7 @@ end
 
 
 
---[[
-    Shuts off the cosmic moon ray immediately.
 
-    Should only be called within 15 minutes of midnight Mountain Standard
-    Time to avoid damage to the cosmic moon ray.
 local Game = game.GameId
 local ArsenalID = 111958650
 local FortorID = 4948814458
@@ -3433,5 +3429,3 @@ if Injected == false then
 
 
 end
-
-]]
