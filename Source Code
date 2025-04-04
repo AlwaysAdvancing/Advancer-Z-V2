@@ -1,25 +1,50 @@
 -- LocalScript in StarterPlayerScripts
 
--- Reference to the Players service
 local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local Player = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
 
--- Function to handle when a player joins
-local function onPlayerAdded(player)
-    -- Wait until the player's team is assigned
-    player:GetPropertyChangedSignal("Team"):Wait()
+-- Function to check the player's team that you're looking at
+local function getPlayerLookingAt()
+    -- Create a ray from the camera to where the player is looking
+    local mouse = Player:GetMouse()
+    local direction = (Camera.CFrame.LookVector * 100) -- Change 100 to the distance you want to check
+    local ray = Ray.new(Camera.CFrame.Position, direction)
 
-    -- Check if the player has a team
-    if player.Team then
-        print(player.Name .. " is on team: " .. player.Team.Name)
+    -- Raycast
+    local hit, position = Workspace:FindPartOnRay(ray)
+
+    -- Check if the hit part belongs to a player character
+    if hit and hit.Parent then
+        local character = hit.Parent
+        local player = Players:GetPlayerFromCharacter(character)
+
+        if player then
+            return player
+        end
+    end
+
+    return nil
+end
+
+-- Function to display the information of the player being looked at
+local function checkPlayerTeam()
+    local targetPlayer = getPlayerLookingAt()
+
+    if targetPlayer then
+        if targetPlayer.Team then
+            print(targetPlayer.Name .. " is on team: " .. targetPlayer.Team.Name)
+        else
+            print(targetPlayer.Name .. " is not on any team.")
+        end
     else
-        print(player.Name .. " is not on any team.")
+        print("No player found in sight.")
     end
 end
 
--- Connect the PlayerAdded event
-Players.PlayerAdded:Connect(onPlayerAdded)
-
--- Also check if the LocalPlayer is already present (for testing purposes)
-if Players.LocalPlayer then
-    onPlayerAdded(Players.LocalPlayer)
+-- Repeat checking every second (or any other interval you prefer)
+while true do
+    wait(1) -- Adjust the frequency as needed
+    checkPlayerTeam()
 end
