@@ -452,16 +452,15 @@ if Game == ArsenalID then
 
 local teamCheckEnabled = false -- New variable for team checking
 
--- Create toggle for team check
 local TeamCheckToggle = AimTab:CreateToggle({
-    Name = "Team Check",
-    CurrentValue = false,
-    Flag = "TeamCheck", -- A flag is the identifier for the configuration file
-    Callback = function(Value)
-        teamCheckEnabled = Value
-    end,
+   Name = "Team Check",
+   CurrentValue = false,
+   Flag = "TeamCheck",
+   Callback = function(Value)
+       teamCheckEnabled = Value
+       print("Team Check Enabled:", teamCheckEnabled) -- Debugging line
+   end,
 })
-
 local function getClosestPlayer()
     local closestPlayer = nil
     local shortestDistance = math.huge
