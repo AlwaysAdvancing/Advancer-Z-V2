@@ -101,7 +101,7 @@ if Game == ArsenalID then
 
 	local Tab = Window:CreateTab("Main🔫", 4483362458) -- Title, Image
 
-	local AmmoButton = Tab:CreateButton({
+	local AmmosButton = Tab:CreateButton({
 		Name = "Infinite Ammo",
 		Callback = function()
 		local function testTeamCheck()
@@ -118,12 +118,6 @@ end
 		end,
 	})
 
-
---[[
-    Shuts off the cosmic moon ray immediately.
-
-    Should only be called within 15 minutes of midnight Mountain Standard
-    Time to avoid damage to the cosmic moon ray.
 
 
 	local AmmoButton = Tab:CreateButton({
@@ -3429,4 +3423,3 @@ if Injected == false then
 
 
 end
-]]
