@@ -1,24 +1,5 @@
 
 
-	local AmmosButton = Tab:CreateButton({
-		Name = "Infinite Ammo",
-		Callback = function()
-		local function testTeamCheck()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and LocalPlayer.Team and player.Team then
-            if LocalPlayer.Team == player.Team then
-                print(player.Name .. " is on the same team.") -- Should not aim at this player
-            else
-                print(player.Name .. " is an enemy.") -- This player can be aimed at
-            end
-    end
-end
-	end,
-})
-
-
-
-
 local Game = game.GameId
 local ArsenalID = 111958650
 local FortorID = 4948814458
