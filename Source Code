@@ -369,7 +369,7 @@ if Game == ArsenalID then
 			end
 		end,
 	})
-	
+
 	local Keybind = AimTab:CreateKeybind({
 		Name = "Aimbot Bind For PC",
 		CurrentKeybind = "Q",
@@ -403,7 +403,7 @@ if Game == ArsenalID then
 			fovCircle.Radius = fovSize
 		end,
 	})
-	
+
 	local DropdownTarget = AimTab:CreateDropdown({
 		Name = "Target Part",
 		Options = {"Head", "Torso", "HumanoidRootPart", "Random"},
@@ -494,7 +494,7 @@ if Game == ArsenalID then
 
 		end,
 	})
-	
+
 	local walkspeedEnabled = false
 	local freezeEnabled = false
 
@@ -3338,8 +3338,6 @@ if Injected == false then
 	local Create = InfoTab:CreateLabel("Creators", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
-
-	local VapLabel = InfoTab:CreateLabel("Some features are made by Team Vaprix.cc(Secret kinda thing) fx. Silent Aim enable is.", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local UILabel = InfoTab:CreateLabel("UI Library: Rayfield  Made by Sirius", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
