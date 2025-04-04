@@ -159,7 +159,7 @@ if Game == ArsenalID then
 		end,
 	})
 
-local ToggleRainbow = Tab:CreateToggle({
+  local ToggleRainbow = Tab:CreateToggle({
    Name = "Rainbow Gun",
    CurrentValue = false,
    Flag = "ToggleRainbow", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
@@ -195,7 +195,7 @@ local ToggleRainbow = Tab:CreateToggle({
 				end
 			end
 		end
-   end,
+  end,
 })
 
 
