@@ -1,3 +1,4 @@
+while wait(0.2) do
 -- LocalScript in StarterPlayerScripts
 
 local Players = game:GetService("Players")
@@ -47,4 +48,5 @@ end
 while true do
     wait(1) -- Adjust the frequency as needed
     checkPlayerTeam()
+end
 end
