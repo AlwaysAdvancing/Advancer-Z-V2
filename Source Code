@@ -477,16 +477,76 @@ end)
 		end,
 	})
 
--- Add this to your Aimbot tab
-local wallCheckEnabled = false
-local WallCheckToggle = AimTab:CreateToggle({
-    Name = "Visible Check (No Wallhacks)",
+-- Add this to your aimbot tab
+local triggerbotEnabled = false
+local TriggerbotToggle = AimTab:CreateToggle({
+    Name = "Triggerbot (No Wallbang)",
     CurrentValue = false,
-    Flag = "WallCheckToggle",
+    Flag = "TriggerbotToggle",
     Callback = function(Value)
-        wallCheckEnabled = Value
+        triggerbotEnabled = Value
     end,
 })
+
+-- Improved wall check for triggerbot
+local function isTargetShootable(targetPart)
+    if not targetPart then return false end
+    
+    local cameraPos = camera.CFrame.Position
+    local targetPos = targetPart.Position
+    local direction = (targetPos - cameraPos).Unit
+    local distance = (targetPos - cameraPos).Magnitude
+
+    -- Special parameters for Arsenal
+    local rayParams = RaycastParams.new()
+    rayParams.FilterDescendantsInstances = {
+        LocalPlayer.Character,
+        workspace.Map,  -- Ignore map geometry
+        workspace.Effects  -- Ignore visual effects
+    }
+    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+    rayParams.IgnoreWater = true
+
+    -- Perform precise raycast
+    local rayResult = workspace:Raycast(cameraPos, direction * distance, rayParams)
+    
+    -- Only shootable if we hit the target directly
+    if rayResult then
+        local hitPart = rayResult.Instance
+        return hitPart:IsDescendantOf(targetPart.Parent)
+    end
+    
+    return false
+end
+
+-- Triggerbot logic
+local function triggerbotAction()
+    if not triggerbotEnabled then return end
+    
+    -- Get the player's gun (Arsenal-specific)
+    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+    if not tool then return end
+    
+    -- Find current target
+    local targetPart = nil
+    local targetPlayer = getClosestPlayer()  -- Use your existing targeting function
+    if targetPlayer and targetPlayer.Character then
+        targetPart = targetPlayer.Character:FindFirstChild(targetPartOption or "Head")
+    end
+    
+    -- Check if we can shoot the target
+    if targetPart and isTargetShootable(targetPart) then
+        -- Simulate mouse click (works on mobile too)
+        if tool:FindFirstChild("Remote") then
+            tool.Remote:FireServer("Fire", true)
+        elseif tool:FindFirstChild("Shoot") then
+            tool.Shoot:FireServer()
+        end
+    end
+end
+
+-- Connect to heartbeat for mobile/PC compatibility
+RunService.Heartbeat:Connect(triggerbotAction)
 
 -- Arsenal-specific wall check
 local function isTargetVisible(targetPart)
