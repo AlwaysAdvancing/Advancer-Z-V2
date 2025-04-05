@@ -183,7 +183,7 @@ local ToggleCrazyRainbow = Tab:CreateToggle({
                     for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
                         if v:IsA('MeshPart') then 
                             v.Color = Color3.fromHSV(zigzag(c), 1, 1)
-                            c = c + 0.01 -- Increment c to change color over time
+                            c = c + 0.001 -- Increment c to change color over time
                         end
                     end
                 end
@@ -213,9 +213,6 @@ local Section = Tab:CreateSection("LocalPlayer")
 
 
 	local AimTab = Window:CreateTab("Aim", 4483362458)
-
-	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
-	local PlayerSection = PlayerTab:CreateSection("Player")
 
 	local RunService = game:GetService("RunService")
 	local Players = game:GetService("Players")
@@ -509,14 +506,15 @@ end)
 	})
 
 -- UI Toggle for Team Check
-local TeamCheckToggle = AimTab:CreateToggle({
-    Name = "Team Check (Ignore Teammates)",
-    CurrentValue = false,
-    Flag = "TeamCheckToggle",
-    Callback = function(Value)
-        teamCheckEnabled = Value
-    end,
- 
+	local TeamCheckToggle = AimTab:CreateToggle({
+    		Name = "Team Check (Ignore Teammates)",
+    		CurrentValue = false,
+    		Flag = "TeamCheckToggle",
+    		Callback = function(Value)
+        		teamCheckEnabled = Value
+			end
+    		end,
+	})
 
 
 local function getClosestPlayer()
