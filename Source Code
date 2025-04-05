@@ -207,33 +207,6 @@ local GunDivider = Tab:CreateDivider()
 
 local Section = Tab:CreateSection("LocalPlayer")
 
-local WalkEnabled = false 
-
-local WalkToggle = Tab:CreateToggle({
-	Name = "Enable Walkspeed",
-	CurrentValue = false,
-	Flag = "WalkToggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-	Callback = function(WalkValue)
-	WalkEnabled = WalkValue
-	while Value do 
-		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
-	end,
- })
-
-local WalkSlider = Tab:CreateSlider({
-	Name = "WalkSpeed",
-	Range = {16, 999},
-	Increment = 10,
-	Suffix = "Speed",
-	CurrentValue = 16,
-	Flag = "WalkSpeedSlider", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-	Callback = function(Value)
-	while WalkEnabled do 
-		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-	while WalkEnabled == false do 
-		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
-	end,
- })
 
 	local AimTab = Window:CreateTab("Aim", 4483362458)
 
