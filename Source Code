@@ -237,6 +237,57 @@ local Section = Tab:CreateSection("LocalPlayer")
 	local LocalPlayer = Players.LocalPlayer
 	local camera = workspace.CurrentCamera
 
+	local SilentEnabled = false
+
+	local function enableSilentAim()
+		SilentEnabled = not SilentEnabled
+		if SilentEnabled then
+			local players = getplrsname()
+			local plr = game[players].LocalPlayer
+
+			coroutine.resume(coroutine.create(function()
+				while SilentEnabled and wait(1) do
+					coroutine.resume(coroutine.create(function()
+						for _, v in pairs(game[players]:GetPlayers()) do
+							if v.Name ~= plr.Name and v.Character then
+								v.Character.RightUpperLeg.CanCollide = false
+								v.Character.RightUpperLeg.Transparency = 10
+								v.Character.RightUpperLeg.Size = Vector3.new(14, 14, 14)
+
+								v.Character.LeftUpperLeg.CanCollide = false
+								v.Character.LeftUpperLeg.Transparency = 10
+								v.Character.LeftUpperLeg.Size = Vector3.new(14, 17, 17)
+
+								if v.Character:FindFirstChild("HeadHB") then
+									v.Character.HeadHB.CanCollide = false
+									v.Character.HeadHB.Transparency = 10
+									v.Character.HeadHB.Size = Vector3.new(17, 17, 17)
+								end
+
+								v.Character.HumanoidRootPart.CanCollide = false
+								v.Character.HumanoidRootPart.Transparency = 10
+								v.Character.HumanoidRootPart.Size = Vector3.new(14, 14, 14)
+							end
+						end
+					end))
+				end
+			end))
+		end
+	end
+
+	local SilentToggle = AimTab:CreateToggle({
+		Name = "Toggle Silent Aim",
+		Callback = function()
+			enableSilentAim()
+			Rayfield:Notify({
+				Title = SilentEnabled and "Silent Aim Enabled" or "Silent Aim Disabled",
+				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
+				Duration = 5,
+				Image = 4483362458
+			})
+		end
+	})
+
 -- Main Configuration
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -396,56 +447,7 @@ end)
 		end
 	end
 
-	local SilentEnabled = false
 
-	local function enableSilentAim()
-		SilentEnabled = not SilentEnabled
-		if SilentEnabled then
-			local players = getplrsname()
-			local plr = game[players].LocalPlayer
-
-			coroutine.resume(coroutine.create(function()
-				while SilentEnabled and wait(1) do
-					coroutine.resume(coroutine.create(function()
-						for _, v in pairs(game[players]:GetPlayers()) do
-							if v.Name ~= plr.Name and v.Character then
-								v.Character.RightUpperLeg.CanCollide = false
-								v.Character.RightUpperLeg.Transparency = 10
-								v.Character.RightUpperLeg.Size = Vector3.new(14, 14, 14)
-
-								v.Character.LeftUpperLeg.CanCollide = false
-								v.Character.LeftUpperLeg.Transparency = 10
-								v.Character.LeftUpperLeg.Size = Vector3.new(14, 17, 17)
-
-								if v.Character:FindFirstChild("HeadHB") then
-									v.Character.HeadHB.CanCollide = false
-									v.Character.HeadHB.Transparency = 10
-									v.Character.HeadHB.Size = Vector3.new(17, 17, 17)
-								end
-
-								v.Character.HumanoidRootPart.CanCollide = false
-								v.Character.HumanoidRootPart.Transparency = 10
-								v.Character.HumanoidRootPart.Size = Vector3.new(14, 14, 14)
-							end
-						end
-					end))
-				end
-			end))
-		end
-	end
-
-	local SilentToggle = AimTab:CreateToggle({
-		Name = "Toggle Silent Aim",
-		Callback = function()
-			enableSilentAim()
-			Rayfield:Notify({
-				Title = SilentEnabled and "Silent Aim Enabled" or "Silent Aim Disabled",
-				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
-				Duration = 5,
-				Image = 4483362458
-			})
-		end
-	})
 
 
 
@@ -475,10 +477,10 @@ end)
 		end,
 	})
 
--- Add this to your aimbot tab
+-- Add this to your Aimbot tab
 local wallCheckEnabled = false
 local WallCheckToggle = AimTab:CreateToggle({
-    Name = "Visible Check (No Through Walls)",
+    Name = "Visible Check (No Wallhacks)",
     CurrentValue = false,
     Flag = "WallCheckToggle",
     Callback = function(Value)
@@ -486,49 +488,71 @@ local WallCheckToggle = AimTab:CreateToggle({
     end,
 })
 
--- Improved wall check function
+-- Arsenal-specific wall check
 local function isTargetVisible(targetPart)
     if not wallCheckEnabled then return true end
     
     local cameraPos = camera.CFrame.Position
     local targetPos = targetPart.Position
-    
-    -- Raycast parameters
+    local direction = (targetPos - cameraPos).Unit
+    local distance = (targetPos - cameraPos).Magnitude
+
+    -- Special Arsenal raycast parameters
     local rayParams = RaycastParams.new()
-    rayParams.FilterDescendantsInstances = {LocalPlayer.Character, targetPart.Parent}
+    rayParams.FilterDescendantsInstances = {
+        LocalPlayer.Character,
+        targetPart.Parent,
+        workspace.Map  -- Ignore map geometry for better performance
+    }
     rayParams.FilterType = Enum.RaycastFilterType.Blacklist
     rayParams.IgnoreWater = true
+
+    -- Perform raycast (mobile-friendly version)
+    local rayResult = workspace:Raycast(cameraPos, direction * distance, rayParams)
     
-    -- Perform raycast
-    local rayResult = workspace:Raycast(
-        cameraPos,
-        (targetPos - cameraPos).Unit * (targetPos - cameraPos).Magnitude,
-        rayParams
-    )
+    -- Debug visualization (visible in studio)
+    if rayResult then
+        local hitPart = rayResult.Instance
+        local hitHumanoid = hitPart:FindFirstAncestorOfClass("Humanoid")
+        -- Only valid if we hit the target player or nothing
+        return hitHumanoid and hitHumanoid.Parent == targetPart.Parent
+    end
     
-    -- Only visible if ray hits nothing or hits the target itself
-    return not rayResult or rayResult.Instance:IsDescendantOf(targetPart.Parent)
+    return true  -- No hit means visible
 end
 
--- Update your existing getClosestPlayer function:
+-- Modified targeting for mobile
 local function getClosestPlayer()
-    -- ... keep all your existing targeting logic ...
+    local closestPlayer = nil
+    local shortestDistance = math.huge
     
-    if onScreen then
-        local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
-        if (not fovEnabled) or (distance <= fovCircle.Radius) then
-            -- Add this visibility check
-            if isTargetVisible(part) then  -- <-- Only this new condition needed
-                if distance < shortestDistance then
-                    shortestDistance = distance
-                    closestPlayer = player
-                end
-            end
-        end
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player == LocalPlayer then continue end
+        
+        local character = player.Character
+        if not character then continue end
+        
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then continue end
+        
+        -- Arsenal-specific visibility check
+        if not isTargetVisible(humanoidRootPart) then continue end
+        
+        -- Rest of your targeting logic...
     end
     
     return closestPlayer
 end
+
+-- UI Toggle for Team Check
+	local TeamCheckToggle = AimTab:CreateToggle({
+    		Name = "Team Check (Ignore Teammates)",
+    		CurrentValue = false,
+    		Flag = "TeamCheckToggle",
+    		Callback = function(Value)
+        		teamCheckEnabled = Value
+    		end,
+	})
 
 	local ToggleFOV = AimTab:CreateToggle({
 		Name = "FOV Visibility",
@@ -578,15 +602,7 @@ end
 		end,
 	})
 
--- UI Toggle for Team Check
-	local TeamCheckToggle = AimTab:CreateToggle({
-    		Name = "Team Check (Ignore Teammates)",
-    		CurrentValue = false,
-    		Flag = "TeamCheckToggle",
-    		Callback = function(Value)
-        		teamCheckEnabled = Value
-    		end,
-	})
+
 
 
 local function getClosestPlayer()
