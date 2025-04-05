@@ -2095,7 +2095,7 @@ if Injected == false and Game == FortorID then do
 		Callback = function()
 			game.Players.LocalPlayer.Character.Humanoid.Health = 0
 		end,
-	})
+	 })
 
 	local SettingTab = Window:CreateTab("Settings", 4483362458) -- Title, Image
 
