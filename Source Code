@@ -2088,7 +2088,6 @@ if Injected == false then do
 	local SliderSens = AimTab:CreateSlider({
 		Name = "Sensitivity",
 		Range = {0, 100},
-		Increment = 1,
 		Suffix = "%",
 		CurrentValue = 100,
 		Flag = "SliderSens",
