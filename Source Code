@@ -8,7 +8,7 @@ local Injected = false
 
 
 
-if Game == ArsenalID then
+if game.PlaceId == ArsenalID then
 
 	Injected = true
 
