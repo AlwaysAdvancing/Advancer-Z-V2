@@ -2091,7 +2091,7 @@ if Injected == false then do
    		Increment = 10,
    		Suffix = "Sensevitivity",
    		CurrentValue = 100,
-   		Flag = "Slider1",
+   		Flag = "Slider5341",
 		Callback = function(Value)
 			sensitivity = Value
 		end,
