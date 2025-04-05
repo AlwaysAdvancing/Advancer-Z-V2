@@ -1,5 +1,5 @@
 
-local Game = game.GameId
+local Game = game.PlaceId
 local ArsenalID = 111958650
 local FortorID = 4948814458
 local fischid = 5750914919
@@ -8,7 +8,7 @@ local Injected = false
 
 
 
-if game.PlaceId == ArsenalID then
+if Game == ArsenalID then
 
 	Injected = true
 
