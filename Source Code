@@ -223,6 +223,7 @@ local Section = Tab:CreateSection("LocalPlayer")
 	local LocalPlayer = Players.LocalPlayer
 	local camera = workspace.CurrentCamera
 
+-- Main Configuration
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
@@ -238,7 +239,7 @@ local targetPartOption = "Head"
 local teamCheckEnabled = false
 local sensitivity = 100
 
--- FOV Circle
+-- FOV Circle (visible only on PC)
 local fovCircle = Drawing.new("Circle")
 fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
 fovCircle.Thickness = 2
@@ -323,43 +324,208 @@ local function aimAtTarget()
     end
 end
 
-	local function getClosestPlayer()
-		local closestPlayer = nil
-		local shortestDistance = math.huge
-		local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
-		local selectedPart = targetPartOption
-		if selectedPart == "Random" then
-			local parts = {"Head", "Torso", "HumanoidRootPart"}
-			selectedPart = parts[math.random(1, #parts)]
-		end
+-- Mobile Controls
+local touchControls = {
+    aimButton = nil,
+    isAiming = false
+}
 
-		for _, player in ipairs(Players:GetPlayers()) do
-			if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(selectedPart) then
-				if teamCheckEnabled then
-					if LocalPlayer.Team and player.Team and LocalPlayer.Team == player.Team then
-						continue
+-- Create mobile aim button if on mobile
+if UserInputService.TouchEnabled then
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    touchControls.aimButton = Instance.new("TextButton")
+    touchControls.aimButton.Size = UDim2.new(0, 100, 0, 50)
+    touchControls.aimButton.Position = UDim2.new(0.8, 0, 0.7, 0)
+    touchControls.aimButton.Text = "AIM"
+    touchControls.aimButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+    touchControls.aimButton.Parent = screenGui
+    
+    touchControls.aimButton.MouseButton1Down:Connect(function()
+        touchControls.isAiming = true
+    end)
+    
+    touchControls.aimButton.MouseButton1Up:Connect(function()
+        touchControls.isAiming = false
+    end)
+end
 
-					end
-				end
+-- Input handling for both PC and Mobile
+RunService.RenderStepped:Connect(function()
+    fovCircle.Position = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    
+    -- Mobile aiming
+    if UserInputService.TouchEnabled and touchControls.isAiming and aimbotEnabled then
+        aimAtTarget()
+    end
+    
+    -- PC aiming
+    if holdingBind and aimbotEnabled then
+        aimAtTarget()
+    end
+end)
 
-				local part = player.Character:FindFirstChild(selectedPart)
-				local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
-				if onScreen then
-					local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
-					if (not fovEnabled) or (distance <= fovCircle.Radius) then
-						if distance < shortestDistance then
-							shortestDistance = distance
-							closestPlayer = player
-						end
-					end
-				end
-			end
-			continue
+-- UI Toggle for Team Check
+local TeamCheckToggle = AimTab:CreateToggle({
+    Name = "Team Check (Ignore Teammates)",
+    CurrentValue = false,
+    Flag = "TeamCheckToggle",
+    Callback = function(Value)
+        teamCheckEnabled = Value
+    end,
+})-- Main Configuration
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local camera = workspace.CurrentCamera
 
-		end
-		return closestPlayer
-	end
+-- Aimbot Settings
+local aimbotEnabled = false
+local holdingBind = false
+local fovEnabled = false
+local fovSize = 50
+local targetPartOption = "Head"
+local teamCheckEnabled = false
+local sensitivity = 100
 
+-- FOV Circle (visible only on PC)
+local fovCircle = Drawing.new("Circle")
+fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
+fovCircle.Thickness = 2
+fovCircle.Transparency = 1
+fovCircle.Visible = false
+fovCircle.Radius = fovSize
+
+-- Team Check Function (Arsenal-Specific)
+local function isEnemy(player)
+    if not teamCheckEnabled then
+        return true -- Target everyone if team check is off
+    end
+    
+    -- Arsenal uses TeamColor for teams
+    if player.TeamColor and LocalPlayer.TeamColor then
+        return player.TeamColor ~= LocalPlayer.TeamColor
+    end
+    
+    -- Fallback for games without TeamColor
+    return player.Team ~= LocalPlayer.Team
+end
+
+-- Find the closest player (with team check)
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    local selectedPart = targetPartOption
+    
+    if selectedPart == "Random" then
+        selectedPart = ({"Head", "Torso", "HumanoidRootPart"})[math.random(1, 3)]
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Skip if invalid target
+        if player == LocalPlayer or not player.Character or not player.Character:FindFirstChild(selectedPart) then
+            continue
+        end
+
+        -- Skip teammates if team check is on
+        if not isEnemy(player) then
+            continue
+        end
+
+        -- Check if player is in FOV
+        local part = player.Character:FindFirstChild(selectedPart)
+        local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
+        
+        if onScreen then
+            local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+            if (not fovEnabled) or (distance <= fovCircle.Radius) then
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+-- Aimbot lock function
+local function aimAtTarget()
+    local target = getClosestPlayer()
+    if target and target.Character then
+        local partName = targetPartOption
+        if partName == "Random" then
+            partName = ({"Head", "Torso", "HumanoidRootPart"})[math.random(1, 3)]
+        end
+        local targetPart = target.Character:FindFirstChild(partName)
+        if targetPart then
+            local newCF = CFrame.new(camera.CFrame.Position, targetPart.Position)
+            if sensitivity <= 0 then
+                return
+            elseif sensitivity < 100 then
+                camera.CFrame = camera.CFrame:Lerp(newCF, sensitivity / 100)
+            else
+                camera.CFrame = newCF
+            end
+        end
+    end
+end
+
+-- Mobile Controls
+local touchControls = {
+    aimButton = nil,
+    isAiming = false
+}
+
+-- Create mobile aim button if on mobile
+if UserInputService.TouchEnabled then
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    touchControls.aimButton = Instance.new("TextButton")
+    touchControls.aimButton.Size = UDim2.new(0, 100, 0, 50)
+    touchControls.aimButton.Position = UDim2.new(0.8, 0, 0.7, 0)
+    touchControls.aimButton.Text = "AIM"
+    touchControls.aimButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+    touchControls.aimButton.Parent = screenGui
+    
+    touchControls.aimButton.MouseButton1Down:Connect(function()
+        touchControls.isAiming = true
+    end)
+    
+    touchControls.aimButton.MouseButton1Up:Connect(function()
+        touchControls.isAiming = false
+    end)
+end
+
+-- Input handling for both PC and Mobile
+RunService.RenderStepped:Connect(function()
+    fovCircle.Position = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    
+    -- Mobile aiming
+    if UserInputService.TouchEnabled and touchControls.isAiming and aimbotEnabled then
+        aimAtTarget()
+    end
+    
+    -- PC aiming
+    if holdingBind and aimbotEnabled then
+        aimAtTarget()
+    end
+end)
+
+-- UI Toggle for Team Check
+local TeamCheckToggle = AimTab:CreateToggle({
+    Name = "Team Check (Ignore Teammates)",
+    CurrentValue = false,
+    Flag = "TeamCheckToggle",
+    Callback = function(Value)
+        teamCheckEnabled = Value
+    end,
+})
 	local function aimAtTarget()
 		local target = getClosestPlayer()
 		if target and target.Character then
