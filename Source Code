@@ -104,14 +104,12 @@ local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alwa
 	})
 
 
-	local Tab = Window:CreateTab("Main🔫", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Main🔫", 4483362458)
+local GunSection = Tab:CreateSection("Toggle Features")
 
-
-	local GunSection = Tab:CreateSection("Gun Mods")
-
-
--- Converted Ammo System to Toggle
+-- Infinite Ammo Toggle (Fixed)
 local infiniteAmmoEnabled = false
+local infiniteAmmoThread = nil
 local InfiniteAmmoToggle = Tab:CreateToggle({
     Name = "Infinite Ammo",
     CurrentValue = false,
@@ -119,18 +117,22 @@ local InfiniteAmmoToggle = Tab:CreateToggle({
     Callback = function(Value)
         infiniteAmmoEnabled = Value
         if Value then
-            coroutine.wrap(function()
-                while infiniteAmmoEnabled and wait() do
+            infiniteAmmoThread = task.spawn(function()
+                while infiniteAmmoEnabled do
                     game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
                     game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
+                    task.wait()
                 end
-            end)()
+            end)
+        else
+            if infiniteAmmoThread then task.cancel(infiniteAmmoThread) end
         end
     end,
 })
 
--- Converted Recoil System to Toggle
+-- No Recoil Toggle (Fixed)
 local noRecoilEnabled = false
+local noRecoilThread = nil
 local NoRecoilToggle = Tab:CreateToggle({
     Name = "No Recoil",
     CurrentValue = false,
@@ -138,20 +140,24 @@ local NoRecoilToggle = Tab:CreateToggle({
     Callback = function(Value)
         noRecoilEnabled = Value
         if Value then
-            coroutine.wrap(function()
-                while noRecoilEnabled and wait(5) do
+            noRecoilThread = task.spawn(function()
+                while noRecoilEnabled do
                     for _, v in pairs(game.ReplicatedStorage.Weapons:GetDescendants()) do
                         if v.Name == "RecoilControl" then v.Value = 0 end
                         if v.Name == "MaxSpread" then v.Value = 0 end
                     end
+                    task.wait(5)
                 end
-            end)()
+            end)
+        else
+            if noRecoilThread then task.cancel(noRecoilThread) end
         end
     end,
 })
 
--- Converted Fire Rate to Toggle
+-- Fire Rate Toggle (Fixed)
 local fireRateEnabled = false
+local fireRateThread = nil
 local FireRateToggle = Tab:CreateToggle({
     Name = "Firerate Mod",
     CurrentValue = false,
@@ -159,14 +165,17 @@ local FireRateToggle = Tab:CreateToggle({
     Callback = function(Value)
         fireRateEnabled = Value
         if Value then
-            coroutine.wrap(function()
-                while fireRateEnabled and wait(5) do
+            fireRateThread = task.spawn(function()
+                while fireRateEnabled do
                     for _, v in pairs(game.ReplicatedStorage.Weapons:GetDescendants()) do
                         if v.Name == "Auto" then v.Value = true end
                         if v.Name == "FireRate" then v.Value = 0.02 end
                     end
+                    task.wait(5)
                 end
-            end)()
+            end)
+        else
+            if fireRateThread then task.cancel(fireRateThread) end
         end
     end,
 })
