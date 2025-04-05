@@ -26,7 +26,7 @@ if Game == ArsenalID then
 	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
 
 	local Window = Rayfield:CreateWindow({
-		Name = "Advancer Z (Arsenal) (V 2.0)",
+		Name = player.Name .. "Advancer Z (Arsenal) (V 2.0)",
 		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 		LoadingTitle = "Advancer Z Load",
 		LoadingSubtitle = "by Ocean_Water on Discord",
