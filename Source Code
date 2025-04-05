@@ -2085,12 +2085,13 @@ if Injected == false then do
 		end,
 	})
 
-	local SliderSens = AimTab:CreateSlider({
-		Name = "Sensitivity",
-		Range = {0, 100},
-		Suffix = "%",
-		CurrentValue = 100,
-		Flag = "SliderSens",
+	local SensSlider = AimTab:CreateSlider({
+   		Name = "Sensivitivty",
+   		Range = {1, 100},
+   		Increment = 10,
+   		Suffix = "Sensevitivity",
+   		CurrentValue = 100,
+   		Flag = "Slider1",
 		Callback = function(Value)
 			sensitivity = Value
 		end,
