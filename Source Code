@@ -1997,17 +1997,25 @@ local SensSlider = AimTab:CreateSlider({
 		end,
 	})
 
-	local SensSlider = AimTab:CreateSlider({
-   		Name = "Sensivitivty",
-   		Range = {1, 100},
-   		Increment = 10,
-   		Suffix = "Sensevitivity",
-   		CurrentValue = 100,
-   		Flag = "Slider5341",
-		Callback = function(Value)
-			sensitivity = Value
-		end,
-	})
+local SensSlider = AimTab:CreateSlider({
+    Name = "Sensitivity",
+    Range = {1, 100},
+    Increment = 1,  -- More precise control with 1% steps
+    Suffix = "%",  -- Clear percentage indicator
+    CurrentValue = sensitivity,  -- Use the variable instead of hardcoded value
+    Flag = "AimbotSensitivity",  -- More descriptive flag name
+    Callback = function(Value)
+        sensitivity = Value
+        -- Optional: Add visual feedback
+        Rayfield:Notify({
+            Title = "Sensitivity Updated",
+            Content = string.format("Set to %d%%", Value),
+            Duration = 1,
+            Image = 4483362458
+        })
+    end,
+})
+
 
 	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 		if gameProcessedEvent then return end
