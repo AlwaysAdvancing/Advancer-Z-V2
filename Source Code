@@ -110,58 +110,66 @@ local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alwa
 	local GunSection = Tab:CreateSection("Gun Mods")
 
 
-	local AmmoButton = Tab:CreateButton({
-		Name = "Infinite Ammo",
-		Callback = function()
-			local replicationstorage = game.ReplicatedStorage
+-- Converted Ammo System to Toggle
+local infiniteAmmoEnabled = false
+local InfiniteAmmoToggle = Tab:CreateToggle({
+    Name = "Infinite Ammo",
+    CurrentValue = false,
+    Flag = "InfiniteAmmoToggle",
+    Callback = function(Value)
+        infiniteAmmoEnabled = Value
+        if Value then
+            coroutine.wrap(function()
+                while infiniteAmmoEnabled and wait() do
+                    game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
+                    game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
+                end
+            end)()
+        end
+    end,
+})
 
-			while wait() do
-				game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
-				game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
-			end
+-- Converted Recoil System to Toggle
+local noRecoilEnabled = false
+local NoRecoilToggle = Tab:CreateToggle({
+    Name = "No Recoil",
+    CurrentValue = false,
+    Flag = "NoRecoilToggle",
+    Callback = function(Value)
+        noRecoilEnabled = Value
+        if Value then
+            coroutine.wrap(function()
+                while noRecoilEnabled and wait(5) do
+                    for _, v in pairs(game.ReplicatedStorage.Weapons:GetDescendants()) do
+                        if v.Name == "RecoilControl" then v.Value = 0 end
+                        if v.Name == "MaxSpread" then v.Value = 0 end
+                    end
+                end
+            end)()
+        end
+    end,
+})
 
-		end,
-	})
-
-	local RecoilButton = Tab:CreateButton({
-		Name = "No Recoil",
-		Callback = function()
-			local replicationstorage = game.ReplicatedStorage
-
-			while wait(5) do
-
-				for i, v in pairs(replicationstorage.Weapons:GetDescendants()) do
-					if v.Name == "RecoilControl" then
-						v.Value = 0
-					end
-					if v.Name == "MaxSpread" then
-						v.Value = 0
-					end
-				end
-			end
-
-		end,
-	})
-
-	local FRButton = Tab:CreateButton({
-		Name = "Firerate Mod",
-		Callback = function()
-			local replicationstorage = game.ReplicatedStorage
-
-			while wait(5) do
-
-				for i, v in pairs(replicationstorage.Weapons:GetDescendants()) do
-					if v.Name == "Auto" then
-						v.Value = true
-					end
-					if v.Name == "FireRate" then
-						v.Value = 0.02
-					end
-				end
-			end
-
-		end,
-	})
+-- Converted Fire Rate to Toggle
+local fireRateEnabled = false
+local FireRateToggle = Tab:CreateToggle({
+    Name = "Firerate Mod",
+    CurrentValue = false,
+    Flag = "FireRateToggle",
+    Callback = function(Value)
+        fireRateEnabled = Value
+        if Value then
+            coroutine.wrap(function()
+                while fireRateEnabled and wait(5) do
+                    for _, v in pairs(game.ReplicatedStorage.Weapons:GetDescendants()) do
+                        if v.Name == "Auto" then v.Value = true end
+                        if v.Name == "FireRate" then v.Value = 0.02 end
+                    end
+                end
+            end)()
+        end
+    end,
+})
 
 local ToggleCrazyRainbow = Tab:CreateToggle({
     Name = "Rainbow Gun(Crazy mode)",
