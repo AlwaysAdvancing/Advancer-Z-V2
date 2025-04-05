@@ -449,7 +449,6 @@ local TeamCheckToggle = AimTab:CreateToggle({
     end,
 })
 
--- Update the getClosestPlayer function to properly handle team checks
 local function getClosestPlayer()
     local closestPlayer = nil
     local shortestDistance = math.huge
@@ -467,10 +466,10 @@ local function getClosestPlayer()
             continue
         end
 
-        -- Team check logic
+        -- Team check logic (FIXED)
         if teamCheckEnabled then
             -- Skip if the player is on the same team
-            if player.Team and LocalPlayer.Team and player.Team == LocalPlayer.Team then
+            if player.Team and LocalPlayer.Team and (player.Team == LocalPlayer.Team) then
                 continue
             end
         end
