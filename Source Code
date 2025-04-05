@@ -2051,18 +2051,18 @@ if Injected == false then do
 		end,
 	})
 
-	local SliderFOV = AimTab:CreateSlider({
-		Name = "FOV Size",
-		Range = {10, 300},
-		Increment = 5,
-		Suffix = "px",
-		CurrentValue = 50,
-		Flag = "SliderFOV",
-		Callback = function(Value)
-			fovSize = Value
-			fovCircle.Radius = fovSize
-		end,
-	})
+local SensSlider = AimTab:CreateSlider({
+    Name = "Sensitivity",  -- Fixed typo
+    Range = {1, 100},     -- Corrected syntax
+    Increment = 1,         -- More precise than Increment = 10
+    Suffix = "Sens",       -- Shorter suffix
+    Default = 50,          -- Some libraries use 'Default' instead of 'CurrentValue'
+    Flag = "SensSlider",   -- Optional (if saving settings)
+    Callback = function(Value)
+        sensitivity = Value
+        print("Sensitivity set to:", Value) -- Optional debug print
+    end,
+})
 
 	local DropdownTarget = AimTab:CreateDropdown({
 		Name = "Target Part",
