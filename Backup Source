@@ -1,4 +1,5 @@
 
+
 local Game = game.GameId
 local ArsenalID = 111958650
 local FortorID = 4948814458
@@ -98,7 +99,12 @@ if Game == ArsenalID then
 		}
 	})
 
+
 	local Tab = Window:CreateTab("Main🔫", 4483362458) -- Title, Image
+
+
+	local GunSection = Tab:CreateSection("Gun Mods")
+
 
 	local AmmoButton = Tab:CreateButton({
 		Name = "Infinite Ammo",
@@ -153,47 +159,53 @@ if Game == ArsenalID then
 		end,
 	})
 
-	local RainbowButton = Tab:CreateButton({
-		Name = "Rainbow Gun",
-		Callback = function()
-			local c = 1
-			function zigzag(X)
-				return math.acos(math.cos(X * math.pi)) / math.pi
-			end
-			game:GetService("RunService").RenderStepped:Connect(function()
-				if game.Workspace.Camera:FindFirstChild('Arms') then
-					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-						if v.ClassName == 'MeshPart' then 
-							v.Color = Color3.fromHSV(zigzag(c),1,1)
-							c = c + .0001
-						end
-					end
-				end
-			end)
+local ToggleCrazyRainbow = Tab:CreateToggle({
+    Name = "Rainbow Gun(Crazy mode)",
+    CurrentValue = false,
+    Flag = "ToggleCrazyRainbow", 
+    Callback = function(Value)
+        local c = 1
+        local function zigzag(X)
+            return math.acos(math.cos(X * math.pi)) / math.pi
+        end
+        
+        local rainbowConnection -- This will hold the connection to the RenderStepped
 
-		end,
-	})
+        if Value then
+            Values = false
+            -- Start rainbow update
+            rainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                if game.Workspace.Camera:FindFirstChild('Arms') then
+                    for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
+                        if v:IsA('MeshPart') then 
+                            v.Color = Color3.fromHSV(zigzag(c), 1, 1)
+                            c = c + 0.01 -- Increment c to change color over time
+                        end
+                    end
+                end
+            end)
+        else
+            -- Stop rainbow update
+            if rainbowConnection then
+                rainbowConnection:Disconnect() -- Disconnect to stop the effect
+                rainbowConnection = nil
+            end
 
-	local NoRainbowButton = Tab:CreateButton({
-		Name = "Remove Rainbow Gun",
-		Callback = function()
-			local c = 1
-			function zigzag(X)
-				return math.acos(math.cos(X * math.pi)) / math.pi
-			end
-			game:GetService("RunService").RenderStepped:Connect(function()
-				if game.Workspace.Camera:FindFirstChild('Arms') then
-					for i,v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-						if v.ClassName == 'MeshPart' then 
-							v.Color = Color3.fromHSV(zigzag(c),1,1)
-							c = c - .0001
-						end
-					end
-				end
-			end)
+            -- Optionally, you can reset the color when toggled off
+            if game.Workspace.Camera:FindFirstChild('Arms') then
+                for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
+                    if v:IsA('MeshPart') then 
+                        v.Color = Color3.new(1, 1, 1) -- Set to original color or any color you want
+                    end
+                end
+            end
+        end
+    end,
+})
 
-		end,
-	})
+local GunDivider = Tab:CreateDivider()
+
+local Section = Tab:CreateSection("LocalPlayer")
 
 
 	local AimTab = Window:CreateTab("Aim", 4483362458)
@@ -201,12 +213,6 @@ if Game == ArsenalID then
 	local PlayerTab = Window:CreateTab("LocalPlayer", "scan-face")
 	local PlayerSection = PlayerTab:CreateSection("Player")
 
-	Rayfield:Notify({
-		Title = "Loaded",
-		Content = "Key Correct",
-		Duration = 6.5,
-		Image = 4483362458,
-	})
 	local RunService = game:GetService("RunService")
 	local Players = game:GetService("Players")
 	local UserInputService = game:GetService("UserInputService")
@@ -429,6 +435,60 @@ if Game == ArsenalID then
 			sensitivity = Value
 		end,
 	})
+	local teamCheckEnabled = false
+local TeamCheckToggle = AimTab:CreateToggle({
+    Name = "Team Check (Ignore Teammates)",
+    CurrentValue = false,
+    Flag = "TeamCheckToggle",
+    Callback = function(Value)
+        teamCheckEnabled = Value
+    end,
+})
+
+-- Update the getClosestPlayer function to properly handle team checks
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    local selectedPart = targetPartOption
+    
+    if selectedPart == "Random" then
+        local parts = {"Head", "Torso", "HumanoidRootPart"}
+        selectedPart = parts[math.random(1, #parts)]
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Skip if it's the local player or if the player has no character
+        if player == LocalPlayer or not player.Character or not player.Character:FindFirstChild(selectedPart) then
+            continue
+        end
+
+        -- Team check logic
+        if teamCheckEnabled then
+            -- Skip if the player is on the same team
+            if player.Team and LocalPlayer.Team and player.Team == LocalPlayer.Team then
+                continue
+            end
+        end
+
+        -- Calculate distance and check if player is in FOV
+        local part = player.Character:FindFirstChild(selectedPart)
+        local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
+        
+        if onScreen then
+            local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+            -- Only consider players within FOV (if FOV is enabled)
+            if (not fovEnabled) or (distance <= fovCircle.Radius) then
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
 
 	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 		if gameProcessedEvent then return end
@@ -543,7 +603,7 @@ if Game == ArsenalID then
 
 
 
-	local VisualSection = Tab:CreateSection("Visuals")
+	local VisualSection = AimTab:CreateSection("Visuals")
 
 
 
@@ -786,8 +846,6 @@ if Game == ArsenalID then
 
 
 end
-
-
 
 
 
@@ -1040,7 +1098,19 @@ if Game == FortorID then
 		CurrentValue = false,
 		Flag = "ToggleAimTeam", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 		Callback = function(Value)
-			teamCheckEnabled = Value
+local function checkPlayerTeam()
+    local targetPlayer = getPlayerLookingAt()
+
+    if targetPlayer then
+        if targetPlayer.Team then
+            print(targetPlayer.Name .. " is on team: " .. targetPlayer.Team.Name)
+        else
+            print(targetPlayer.Name .. " is not on any team.")
+        end
+    else
+        print("No player found in sight.")
+    end
+end
 		end,
 	})
 
@@ -1550,10 +1620,8 @@ if Game == FortorID then
 
 end
 
-
-
-
-if Injected == false then
+wait(0.2)
+if Injected == false then do
 
 
 	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
@@ -2003,7 +2071,7 @@ if Injected == false then
 		end
 	end
 
-	AimTab:CreateToggle({
+	local togglesilentfort = AimTab:CreateToggle({
 		Name = "Toggle Silent Aim",
 		Callback = function()
 			enableSilentAim()
@@ -2012,8 +2080,9 @@ if Injected == false then
 				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
 				Duration = 5,
 				Image = 4483362458
-			})
-		end
+				end
+			end
+		end,
 	})
 
 
@@ -2023,7 +2092,7 @@ if Injected == false then
 		Callback = function()
 			game.Players.LocalPlayer.Character.Humanoid.Health = 0
 		end,
-	})
+	 })
 
 	local SettingTab = Window:CreateTab("Settings", 4483362458) -- Title, Image
 
@@ -3340,6 +3409,4 @@ if Injected == false then
 	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local UILabel = InfoTab:CreateLabel("UI Library: Rayfield  Made by Sirius", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
-
-
 end
