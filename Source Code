@@ -462,6 +462,60 @@ local WalkSlider = Tab:CreateSlider({
 			sensitivity = Value
 		end,
 	})
+	local teamCheckEnabled = false
+local TeamCheckToggle = AimTab:CreateToggle({
+    Name = "Team Check (Ignore Teammates)",
+    CurrentValue = false,
+    Flag = "TeamCheckToggle",
+    Callback = function(Value)
+        teamCheckEnabled = Value
+    end,
+})
+
+-- Update the getClosestPlayer function to properly handle team checks
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    local selectedPart = targetPartOption
+    
+    if selectedPart == "Random" then
+        local parts = {"Head", "Torso", "HumanoidRootPart"}
+        selectedPart = parts[math.random(1, #parts)]
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Skip if it's the local player or if the player has no character
+        if player == LocalPlayer or not player.Character or not player.Character:FindFirstChild(selectedPart) then
+            continue
+        end
+
+        -- Team check logic
+        if teamCheckEnabled then
+            -- Skip if the player is on the same team
+            if player.Team and LocalPlayer.Team and player.Team == LocalPlayer.Team then
+                continue
+            end
+        end
+
+        -- Calculate distance and check if player is in FOV
+        local part = player.Character:FindFirstChild(selectedPart)
+        local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
+        
+        if onScreen then
+            local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+            -- Only consider players within FOV (if FOV is enabled)
+            if (not fovEnabled) or (distance <= fovCircle.Radius) then
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
 
 	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 		if gameProcessedEvent then return end
