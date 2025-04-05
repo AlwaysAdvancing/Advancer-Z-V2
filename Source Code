@@ -2071,7 +2071,7 @@ if Injected == false then do
 		end
 	end
 
-	AimTab:CreateToggle({
+	local togglesilentfort = AimTab:CreateToggle({
 		Name = "Toggle Silent Aim",
 		Callback = function()
 			enableSilentAim()
