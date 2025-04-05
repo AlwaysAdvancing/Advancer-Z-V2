@@ -2084,8 +2084,9 @@ if Injected == false and Game == FortorID then do
 				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
 				Duration = 5,
 				Image = 4483362458
-			})
-		end
+				end
+			end
+		end,
 	})
 
 
