@@ -474,6 +474,61 @@ end)
 			end
 		end,
 	})
+
+-- Add this to your existing aimbot script
+local wallCheckEnabled = false
+local WallCheckToggle = AimTab:CreateToggle({
+    Name = "Wall Check (No Shoot Through Walls)",
+    CurrentValue = false,
+    Flag = "WallCheckToggle",
+    Callback = function(Value)
+        wallCheckEnabled = Value
+    end,
+})
+
+-- Raycast function to check for walls
+local function canSeeTarget(targetPart)
+    if not wallCheckEnabled then return true end
+    
+    local cameraPos = camera.CFrame.Position
+    local targetPos = targetPart.Position
+    local direction = (targetPos - cameraPos).Unit
+    
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {LocalPlayer.Character}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    
+    local raycastResult = workspace:Raycast(cameraPos, direction * (targetPos - cameraPos).Magnitude, raycastParams)
+    
+    -- Return true only if we hit the target (no walls in between)
+    if raycastResult then
+        local hitPart = raycastResult.Instance
+        return hitPart:IsDescendantOf(targetPart.Parent)
+    end
+    
+    return true
+end
+
+-- Modified getClosestPlayer function (add this to your existing one)
+local function getClosestPlayer()
+    -- ... your existing target finding code ...
+    
+    if onScreen then
+        local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+        if (not fovEnabled) or (distance <= fovCircle.Radius) then
+            -- Add this wall check condition
+            if canSeeTarget(part) then
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
 	local ToggleFOV = AimTab:CreateToggle({
 		Name = "FOV Visibility",
 		CurrentValue = false,
