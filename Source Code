@@ -23,13 +23,17 @@ if Game == ArsenalID then
 
 	Injected = true
 
-	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer -- Get the local player first
+
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
+
 
 	local Window = Rayfield:CreateWindow({
-		Name = player.Name .. "Advancer Z (Arsenal) (V 2.0)",
-		Icon = 1, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-		LoadingTitle = "Advancer Z Load",
-		LoadingSubtitle = "by Ocean_Water on Discord",
+    		Name = LocalPlayer.Name .. " | Advancer Z (Arsenal) (V 2.0)", -- Now correctly displays "PlayerName | Advancer Z..."
+    		Icon = 1,
+    		LoadingTitle = "Advancer Z Load",
+    		LoadingSubtitle = "by Ocean_Water on Discord",
 		Theme = {
 			TextColor = Color3.fromRGB(230, 230, 230),
 
