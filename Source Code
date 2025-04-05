@@ -477,10 +477,10 @@ end)
 		end,
 	})
 
--- Add this to your aimbot tab
+-- Add to your Aimbot tab
 local triggerbotEnabled = false
 local TriggerbotToggle = AimTab:CreateToggle({
-    Name = "Triggerbot (No Wallbang)",
+    Name = "Smart Triggerbot",
     CurrentValue = false,
     Flag = "TriggerbotToggle",
     Callback = function(Value)
@@ -488,8 +488,8 @@ local TriggerbotToggle = AimTab:CreateToggle({
     end,
 })
 
--- Improved wall check for triggerbot
-local function isTargetShootable(targetPart)
+-- Enhanced visibility check
+local function hasClearShot(targetPart)
     if not targetPart then return false end
     
     local cameraPos = camera.CFrame.Position
@@ -497,123 +497,70 @@ local function isTargetShootable(targetPart)
     local direction = (targetPos - cameraPos).Unit
     local distance = (targetPos - cameraPos).Magnitude
 
-    -- Special parameters for Arsenal
+    -- Arsenal-specific raycast setup
     local rayParams = RaycastParams.new()
     rayParams.FilterDescendantsInstances = {
         LocalPlayer.Character,
-        workspace.Map,  -- Ignore map geometry
-        workspace.Effects  -- Ignore visual effects
+        workspace.Map,
+        workspace.Debris,
+        workspace.Effects
     }
     rayParams.FilterType = Enum.RaycastFilterType.Blacklist
     rayParams.IgnoreWater = true
 
-    -- Perform precise raycast
+    -- First check: Simple distance check
+    if distance > 500 then return false end  -- Max engagement distance
+
+    -- Second check: Precise raycast
     local rayResult = workspace:Raycast(cameraPos, direction * distance, rayParams)
     
-    -- Only shootable if we hit the target directly
+    -- Only return true if we hit the target or nothing at all
     if rayResult then
         local hitPart = rayResult.Instance
         return hitPart:IsDescendantOf(targetPart.Parent)
     end
     
-    return false
+    return true
 end
 
--- Triggerbot logic
-local function triggerbotAction()
+-- Main triggerbot logic
+local function handleTriggerbot()
     if not triggerbotEnabled then return end
+    if not aimbotEnabled then return end  -- Only works when aimbot is active
     
-    -- Get the player's gun (Arsenal-specific)
-    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+    local character = LocalPlayer.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid or humanoid.Health <= 0 then return end
+    
+    -- Get current weapon (Arsenal-specific)
+    local tool = character:FindFirstChildOfClass("Tool")
     if not tool then return end
     
-    -- Find current target
-    local targetPart = nil
-    local targetPlayer = getClosestPlayer()  -- Use your existing targeting function
-    if targetPlayer and targetPlayer.Character then
-        targetPart = targetPlayer.Character:FindFirstChild(targetPartOption or "Head")
-    end
+    -- Get aimbot's current target
+    local targetPlayer = getClosestPlayer()
+    if not targetPlayer or not targetPlayer.Character then return end
     
-    -- Check if we can shoot the target
-    if targetPart and isTargetShootable(targetPart) then
-        -- Simulate mouse click (works on mobile too)
+    local targetPart = targetPlayer.Character:FindFirstChild(targetPartOption or "Head")
+    if not targetPart then return end
+    
+    -- Only shoot if we have clear line of sight
+    if hasClearShot(targetPart) then
+        -- Mobile/PC compatible firing
         if tool:FindFirstChild("Remote") then
             tool.Remote:FireServer("Fire", true)
         elseif tool:FindFirstChild("Shoot") then
             tool.Shoot:FireServer()
         end
+        
+        -- Small delay to prevent machine-gun firing
+        task.wait(0.1)
     end
 end
 
--- Connect to heartbeat for mobile/PC compatibility
-RunService.Heartbeat:Connect(triggerbotAction)
-
--- Arsenal-specific wall check
-local function isTargetVisible(targetPart)
-    if not wallCheckEnabled then return true end
-    
-    local cameraPos = camera.CFrame.Position
-    local targetPos = targetPart.Position
-    local direction = (targetPos - cameraPos).Unit
-    local distance = (targetPos - cameraPos).Magnitude
-
-    -- Special Arsenal raycast parameters
-    local rayParams = RaycastParams.new()
-    rayParams.FilterDescendantsInstances = {
-        LocalPlayer.Character,
-        targetPart.Parent,
-        workspace.Map  -- Ignore map geometry for better performance
-    }
-    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
-    rayParams.IgnoreWater = true
-
-    -- Perform raycast (mobile-friendly version)
-    local rayResult = workspace:Raycast(cameraPos, direction * distance, rayParams)
-    
-    -- Debug visualization (visible in studio)
-    if rayResult then
-        local hitPart = rayResult.Instance
-        local hitHumanoid = hitPart:FindFirstAncestorOfClass("Humanoid")
-        -- Only valid if we hit the target player or nothing
-        return hitHumanoid and hitHumanoid.Parent == targetPart.Parent
-    end
-    
-    return true  -- No hit means visible
-end
-
--- Modified targeting for mobile
-local function getClosestPlayer()
-    local closestPlayer = nil
-    local shortestDistance = math.huge
-    
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player == LocalPlayer then continue end
-        
-        local character = player.Character
-        if not character then continue end
-        
-        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-        if not humanoidRootPart then continue end
-        
-        -- Arsenal-specific visibility check
-        if not isTargetVisible(humanoidRootPart) then continue end
-        
-        -- Rest of your targeting logic...
-    end
-    
-    return closestPlayer
-end
-
--- UI Toggle for Team Check
-	local TeamCheckToggle = AimTab:CreateToggle({
-    		Name = "Team Check (Ignore Teammates)",
-    		CurrentValue = false,
-    		Flag = "TeamCheckToggle",
-    		Callback = function(Value)
-        		teamCheckEnabled = Value
-    		end,
-	})
-
+-- Connect to render loop
+RunService.RenderStepped:Connect(handleTriggerbot)
 	local ToggleFOV = AimTab:CreateToggle({
 		Name = "FOV Visibility",
 		CurrentValue = false,
