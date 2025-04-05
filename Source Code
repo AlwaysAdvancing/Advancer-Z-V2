@@ -1,74 +1,139 @@
-local GameId = game.GameId
+
+local Game = game.GameId
 local ArsenalID = 111958650
+local FortorID = 4948814458
+local fischid = 5750914919
+
 local Injected = false
 
-if GameId == ArsenalID then
-    Injected = true
 
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
-    local RunService = game:GetService("RunService")
-    local UserInputService = game:GetService("UserInputService")
 
-    local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library", true))()
+if Game == ArsenalID then
 
-    local Window = Rayfield:CreateWindow({
-        Name = "Welcome " .. LocalPlayer.Name .. " | To 🔫 Advancer Z v2",
-        Icon = 1,
-        LoadingTitle = "Advancer Z Load",
-        LoadingSubtitle = "by Ocean_Water on Discord",
-        ConfigurationSaving = {
-            Enabled = true,
-            FolderName = "AdvancerZ_V2 (Arsenal)",
-            FileName = "Save"
-        },
-        KeySystem = false,
-    })
+	Injected = true
 
-    local Tab = Window:CreateTab("Main🔫", 4483362458)
-    local GunSection = Tab:CreateSection("Toggle Features")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer -- Get the local player first
 
-    -- Generic Toggle Creation Function
-    local function createToggle(name, defaultValue, callbackFunction)
-        return Tab:CreateToggle({
-            Name = name,
-            CurrentValue = defaultValue,
-            Callback = callbackFunction
-        })
-    end
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
 
-    -- Infinite Ammo Toggle
-    local infiniteAmmoEnabled = false
-    local infiniteAmmoThread = nil
 
-    createToggle("Infinite Ammo", false, function(Value)
+	local Window = Rayfield:CreateWindow({
+		Name = "Welcome " .. LocalPlayer.Name .. " | To 🔫 Advancer Z v2",  -- Adds an emoji!
+    		Icon = 1,
+    		LoadingTitle = "Advancer Z Load",
+    		LoadingSubtitle = "by Ocean_Water on Discord",
+		Theme = {
+			TextColor = Color3.fromRGB(230, 230, 230),
+
+			Background = Color3.fromRGB(20, 30, 30),
+			Topbar = Color3.fromRGB(25, 40, 40),
+			Shadow = Color3.fromRGB(15, 20, 20),
+
+			NotificationBackground = Color3.fromRGB(25, 35, 35),
+			NotificationActionsBackground = Color3.fromRGB(230, 240, 240),
+
+			TabBackground = Color3.fromRGB(40, 60, 60),
+			TabStroke = Color3.fromRGB(50, 70, 70),
+			TabBackgroundSelected = Color3.fromRGB(100, 180, 180),
+			TabTextColor = Color3.fromRGB(210, 230, 230),
+			SelectedTabTextColor = Color3.fromRGB(20, 50, 50),
+
+			ElementBackground = Color3.fromRGB(45, 30, 60),
+			ElementBackgroundHover = Color3.fromRGB(50, 35, 70),
+			SecondaryElementBackground = Color3.fromRGB(40, 30, 55),
+			ElementStroke = Color3.fromRGB(70, 50, 85),
+			SecondaryElementStroke = Color3.fromRGB(65, 45, 80),
+
+			SliderBackground = Color3.fromRGB(100, 60, 150),
+			SliderProgress = Color3.fromRGB(130, 80, 180),
+			SliderStroke = Color3.fromRGB(150, 100, 200),
+
+			ToggleBackground = Color3.fromRGB(45, 30, 55),
+			ToggleEnabled = Color3.fromRGB(120, 60, 150),
+			ToggleDisabled = Color3.fromRGB(94, 47, 117),
+			ToggleEnabledStroke = Color3.fromRGB(140, 80, 170),
+			ToggleDisabledStroke = Color3.fromRGB(124, 71, 150),
+			ToggleEnabledOuterStroke = Color3.fromRGB(90, 40, 120),
+			ToggleDisabledOuterStroke = Color3.fromRGB(80, 50, 110),
+
+			DropdownSelected = Color3.fromRGB(30, 60, 60),
+			DropdownUnselected = Color3.fromRGB(25, 40, 40),
+
+			InputBackground = Color3.fromRGB(30, 50, 50),
+			InputStroke = Color3.fromRGB(80, 50, 110),
+			PlaceholderColor = Color3.fromRGB(150, 150, 160)
+		}, -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+		DisableRayfieldPrompts = false,
+		DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+		ConfigurationSaving = {
+			Enabled = true,
+			FolderName = "AdvancerZ_V2 (Arsenal)",
+			FileName = "Save"
+		},
+
+		Discord = {
+			Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+			Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+			RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+		},
+
+		KeySystem = false, -- Set this to true to use our key system
+		KeySettings = {
+			Title = "Advancer Z",
+			Subtitle = "Key System",
+			Note = "The key is Advance", -- Use this to tell the user how to get a key
+			FileName = "KeySys", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+			SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+			GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+			Key = {"Hell", "IamAdmin", "IamOwnerBiches", "Advance", "IDK", "idk", "Idk", "bro.", "bro", "Bro", "Bro.", "bruh", "BRO"} 
+		}
+	})
+
+
+local Tab = Window:CreateTab("Main🔫", 4483362458)
+local GunSection = Tab:CreateSection("Toggle Features")
+
+-- Infinite Ammo Toggle (Fixed)
+local infiniteAmmoEnabled = false
+local infiniteAmmoThread = nil
+local InfiniteAmmoToggle = Tab:CreateToggle({
+    Name = "Infinite Ammo",
+    CurrentValue = false,
+    Flag = "InfiniteAmmoToggle",
+    Callback = function(Value)
         infiniteAmmoEnabled = Value
         if Value then
             infiniteAmmoThread = task.spawn(function()
                 while infiniteAmmoEnabled do
-                    local localVars = LocalPlayer.PlayerGui.GUI.Client.Variables
-                    localVars.ammocount.Value = 999
-                    localVars.ammocount2.Value = 999
-                    task.wait()  -- Using task.wait for performance
+                    game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount.Value = 999
+                    game:GetService("Players").LocalPlayer.PlayerGui.GUI.Client.Variables.ammocount2.Value = 999
+                    task.wait()
                 end
             end)
         else
             if infiniteAmmoThread then task.cancel(infiniteAmmoThread) end
         end
-    end)
+    end,
+})
 
-    -- No Recoil Toggle
-    local noRecoilEnabled = false
-    local noRecoilThread = nil
-    createToggle("No Recoil", false, function(Value)
+-- No Recoil Toggle (Fixed)
+local noRecoilEnabled = false
+local noRecoilThread = nil
+local NoRecoilToggle = Tab:CreateToggle({
+    Name = "No Recoil",
+    CurrentValue = false,
+    Flag = "NoRecoilToggle",
+    Callback = function(Value)
         noRecoilEnabled = Value
         if Value then
             noRecoilThread = task.spawn(function()
                 while noRecoilEnabled do
                     for _, v in pairs(game.ReplicatedStorage.Weapons:GetDescendants()) do
-                        if v.Name == "RecoilControl" or v.Name == "MaxSpread" then
-                            v.Value = 0
-                        end
+                        if v.Name == "RecoilControl" then v.Value = 0 end
+                        if v.Name == "MaxSpread" then v.Value = 0 end
                     end
                     task.wait(5)
                 end
@@ -76,22 +141,26 @@ if GameId == ArsenalID then
         else
             if noRecoilThread then task.cancel(noRecoilThread) end
         end
-    end)
+    end,
+})
 
-    -- Fire Rate Toggle
-    local fireRateEnabled = false
-    local fireRateThread = nil
-    createToggle("Firerate Mod", false, function(Value)
+
+
+-- Fire Rate Toggle (Fixed)
+local fireRateEnabled = false
+local fireRateThread = nil
+local FireRateToggle = Tab:CreateToggle({
+    Name = "Firerate Mod",
+    CurrentValue = false,
+    Flag = "FireRateToggle",
+    Callback = function(Value)
         fireRateEnabled = Value
         if Value then
             fireRateThread = task.spawn(function()
                 while fireRateEnabled do
                     for _, v in pairs(game.ReplicatedStorage.Weapons:GetDescendants()) do
-                        if v.Name == "Auto" then
-                            v.Value = true
-                        elseif v.Name == "FireRate" then
-                            v.Value = 0.02
-                        end
+                        if v.Name == "Auto" then v.Value = true end
+                        if v.Name == "FireRate" then v.Value = 0.02 end
                     end
                     task.wait(5)
                 end
@@ -99,160 +168,811 @@ if GameId == ArsenalID then
         else
             if fireRateThread then task.cancel(fireRateThread) end
         end
-    end)
+    end,
+})
 
-    -- Rainbow Gun Toggle
-    local rainbowConnection = nil
-    createToggle("Rainbow Gun (Crazy mode)", false, function(Value)
+local ToggleCrazyRainbow = Tab:CreateToggle({
+    Name = "Rainbow Gun(Crazy mode)",
+    CurrentValue = false,
+    Flag = "ToggleCrazyRainbow", 
+    Callback = function(Value)
         local c = 1
+        local function zigzag(X)
+            return math.acos(math.cos(X * math.pi)) / math.pi
+        end
+        
+        local rainbowConnection -- This will hold the connection to the RenderStepped
+
         if Value then
-            rainbowConnection = RunService.RenderStepped:Connect(function()
+            Values = false
+            -- Start rainbow update
+            rainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
                 if game.Workspace.Camera:FindFirstChild('Arms') then
                     for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
-                        if v:IsA('MeshPart') then
-                            v.Color = Color3.fromHSV(c, 1, 1)
-                            c = c + 0.001
+                        if v:IsA('MeshPart') then 
+                            v.Color = Color3.fromHSV(zigzag(c), 1, 1)
+                            c = c + 0.001 -- Increment c to change color over time
                         end
                     end
                 end
             end)
         else
+            -- Stop rainbow update
             if rainbowConnection then
-                rainbowConnection:Disconnect()
+                rainbowConnection:Disconnect() -- Disconnect to stop the effect
                 rainbowConnection = nil
             end
-            -- Reset color to white
+
+            -- Optionally, you can reset the color when toggled off
             if game.Workspace.Camera:FindFirstChild('Arms') then
                 for _, v in pairs(game.Workspace.Camera.Arms:GetDescendants()) do
                     if v:IsA('MeshPart') then 
-                        v.Color = Color3.new(1, 1, 1)
+                        v.Color = Color3.new(1, 1, 1) -- Set to original color or any color you want
                     end
                 end
             end
         end
-    end)
+    end,
+})
 
-    local AimTab = Window:CreateTab("Aim", 4483362458)
-    local aimBotEnabled = false
-    local targetPartOption = "Head"
-    local fovEnabled = false
-    local fovCircle = Drawing.new("Circle")
-    local sensitivity = 100
-    local teamCheckEnabled = false
+local GunDivider = Tab:CreateDivider()
 
-    fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
-    fovCircle.Thickness = 2
-    fovCircle.Transparency = 1
-    fovCircle.Visible = false
-    fovCircle.Radius = 50
+local Section = Tab:CreateSection("LocalPlayer")
 
-    -- Aimbot Functionality
-    local function getClosestPlayer()
-        local closestPlayer = nil
-        local shortestDistance = math.huge
-        local screenCenter = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
 
-        for _, player in ipairs(Players:GetPlayers()) do
-            if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(targetPartOption) then
-                local part = player.Character[targetPartOption]
-                local screenPos, onScreen = workspace.CurrentCamera:WorldToViewportPoint(part.Position)
-                if onScreen then
-                    local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
-                    if (not fovEnabled or distance <= fovCircle.Radius) and distance < shortestDistance then
-                        closestPlayer = player
-                        shortestDistance = distance
-                    end
-                end
-            end
-        end
+	local AimTab = Window:CreateTab("Aim", 4483362458)
 
-        return closestPlayer
+	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+	local UserInputService = game:GetService("UserInputService")
+	local LocalPlayer = Players.LocalPlayer
+	local camera = workspace.CurrentCamera
+
+	local SilentEnabled = false
+
+	local function enableSilentAim()
+		SilentEnabled = not SilentEnabled
+		if SilentEnabled then
+			local players = getplrsname()
+			local plr = game[players].LocalPlayer
+
+			coroutine.resume(coroutine.create(function()
+				while SilentEnabled and wait(1) do
+					coroutine.resume(coroutine.create(function()
+						for _, v in pairs(game[players]:GetPlayers()) do
+							if v.Name ~= plr.Name and v.Character then
+								v.Character.RightUpperLeg.CanCollide = false
+								v.Character.RightUpperLeg.Transparency = 10
+								v.Character.RightUpperLeg.Size = Vector3.new(14, 14, 14)
+
+								v.Character.LeftUpperLeg.CanCollide = false
+								v.Character.LeftUpperLeg.Transparency = 10
+								v.Character.LeftUpperLeg.Size = Vector3.new(14, 17, 17)
+
+								if v.Character:FindFirstChild("HeadHB") then
+									v.Character.HeadHB.CanCollide = false
+									v.Character.HeadHB.Transparency = 10
+									v.Character.HeadHB.Size = Vector3.new(17, 17, 17)
+								end
+
+								v.Character.HumanoidRootPart.CanCollide = false
+								v.Character.HumanoidRootPart.Transparency = 10
+								v.Character.HumanoidRootPart.Size = Vector3.new(14, 14, 14)
+							end
+						end
+					end))
+				end
+			end))
+		end
+	end
+
+	local SilentToggle = AimTab:CreateToggle({
+		Name = "Toggle Silent Aim",
+		Callback = function()
+			enableSilentAim()
+			Rayfield:Notify({
+				Title = SilentEnabled and "Silent Aim Enabled" or "Silent Aim Disabled",
+				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
+				Duration = 5,
+				Image = 4483362458
+			})
+		end
+	})
+
+-- Main Configuration
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local camera = workspace.CurrentCamera
+
+-- Aimbot Settings
+local aimbotEnabled = false
+local holdingBind = false
+local fovEnabled = false
+local fovSize = 50
+local targetPartOption = "Head"
+local teamCheckEnabled = false
+local sensitivity = 100
+
+-- FOV Circle (visible only on PC)
+local fovCircle = Drawing.new("Circle")
+fovCircle.Color = Color3.new(0.5, 0.5, 0.5)
+fovCircle.Thickness = 2
+fovCircle.Transparency = 1
+fovCircle.Visible = false
+fovCircle.Radius = fovSize
+
+-- Team Check Function (Arsenal-Specific)
+local function isEnemy(player)
+    if not teamCheckEnabled then
+        return true -- Target everyone if team check is off
     end
-
-    local function aimAtTarget()
-        local target = getClosestPlayer()
-        if target and target.Character then
-            local part = target.Character:FindFirstChild(targetPartOption)
-            if part then
-                local newCF = CFrame.new(workspace.CurrentCamera.CFrame.Position, part.Position)
-                workspace.CurrentCamera.CFrame = workspace.CurrentCamera.CFrame:Lerp(newCF, sensitivity / 100)
-            end
-        end
-    end
-
-    local function handleInput(input, gameProcessed)
-        if gameProcessed then return end
-        if input.UserInputType == Enum.UserInputType.Keyboard then
-            if input.KeyCode == Enum.KeyCode.Q then
-                aimAtTarget()
-            end
-        end
-    end
-
-    UserInputService.InputBegan:Connect(handleInput)
-
-    RunService.RenderStepped:Connect(function()
-        fovCircle.Position = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
-        if aimBotEnabled then
-            aimAtTarget()
-        end
-    end)
-
-    -- UI Elements for Aimbot
-    createToggle("Aimbot", false, function(Value)
-        aimBotEnabled = Value
-    end)
-
-    createToggle("FOV Visibility", false, function(Value)
-        fovEnabled = Value
-        fovCircle.Visible = fovEnabled
-    end)
-
-    -- FOV Size Slider
-    Tab:CreateSlider({
-        Name = "FOV Size",
-        Range = {10, 360},
-        Increment = 5,
-        CurrentValue = fovCircle.Radius,
-        Callback = function(Value)
-            fovCircle.Radius = Value
-        end,
-    })
-
-    -- Target Part Dropdown
-    Tab:CreateDropdown({
-        Name = "Target Part",
-        Options = {"Head", "Torso", "HumanoidRootPart"},
-        CurrentOption = targetPartOption,
-        Callback = function(Options)
-            targetPartOption = Options[1]
-        end,
-    })
-
-    -- Sensitivity Slider
-    Tab:CreateSlider({
-        Name = "Sensitivity",
-        Range = {0, 100},
-        Increment = 1,
-        CurrentValue = sensitivity,
-        Callback = function(Value)
-            sensitivity = Value
-        end,
-    })
-
-    -- Settings Section
-    local SettingTab = Window:CreateTab("Settings", "settings")
-    SettingTab:CreateButton({
-        Name = "Close Advancer Z Entirely",
-        Callback = function()
-            Rayfield:Destroy()
-        end,
-    })
-
-    -- Visuals Tab
-    local VisualSection = Tab:CreateSection("Visuals")
-    -- Implement ESP functionality here.
     
-    -- Ensure to test this script and further optimize parts as needed based on your requirements or environment.
+    -- Arsenal uses TeamColor for teams
+    if player.TeamColor and LocalPlayer.TeamColor then
+        return player.TeamColor ~= LocalPlayer.TeamColor
+    end
+    
+    -- Fallback for games without TeamColor
+    return player.Team ~= LocalPlayer.Team
+end
+
+-- Find the closest player (with team check)
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    local selectedPart = targetPartOption
+    
+    if selectedPart == "Random" then
+        selectedPart = ({"Head", "Torso", "HumanoidRootPart"})[math.random(1, 3)]
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Skip if invalid target
+        if player == LocalPlayer or not player.Character or not player.Character:FindFirstChild(selectedPart) then
+            continue
+        end
+
+        -- Skip teammates if team check is on
+        if not isEnemy(player) then
+            continue
+        end
+
+        -- Check if player is in FOV
+        local part = player.Character:FindFirstChild(selectedPart)
+        local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
+        
+        if onScreen then
+            local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+            if (not fovEnabled) or (distance <= fovCircle.Radius) then
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+-- Aimbot lock function
+local function aimAtTarget()
+    local target = getClosestPlayer()
+    if target and target.Character then
+        local partName = targetPartOption
+        if partName == "Random" then
+            partName = ({"Head", "Torso", "HumanoidRootPart"})[math.random(1, 3)]
+        end
+        local targetPart = target.Character:FindFirstChild(partName)
+        if targetPart then
+            local newCF = CFrame.new(camera.CFrame.Position, targetPart.Position)
+            if sensitivity <= 0 then
+                return
+            elseif sensitivity < 100 then
+                camera.CFrame = camera.CFrame:Lerp(newCF, sensitivity / 100)
+            else
+                camera.CFrame = newCF
+            end
+        end
+    end
+end
+
+
+
+
+-- Input handling for both PC and Mobile
+RunService.RenderStepped:Connect(function()
+    fovCircle.Position = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    
+    -- Mobile aiming
+    if UserInputService.TouchEnabled and touchControls.isAiming and aimbotEnabled then
+        aimAtTarget()
+    end
+    
+    -- PC aiming
+    if holdingBind and aimbotEnabled then
+        aimAtTarget()
+    end
+end)
+
+
+	local function aimAtTarget()
+		local target = getClosestPlayer()
+		if target and target.Character then
+			local partName = targetPartOption
+			if partName == "Random" then
+				local parts = {"Head", "Torso", "HumanoidRootPart"}
+				partName = parts[math.random(1, #parts)]
+			end
+			local targetPart = target.Character:FindFirstChild(partName)
+			if targetPart then
+				local newCF = CFrame.new(camera.CFrame.Position, targetPart.Position)
+				if sensitivity <= 0 then
+					return
+				elseif sensitivity < 100 then
+					camera.CFrame = camera.CFrame:Lerp(newCF, sensitivity / 100)
+				else
+					camera.CFrame = newCF
+				end
+			end
+		end
+	end
+
+	local ToggleAimbot = AimTab:CreateToggle({
+		Name = "Aimbot",
+		CurrentValue = false,
+		Flag = "Toggle1",
+		Callback = function(Value)
+			aimbotEnabled = Value
+		end,
+	})
+
+	local function getplrsname()
+		for i, v in pairs(game:GetChildren()) do
+			if v.ClassName == "Players" then
+				return v.Name
+			end
+		end
+	end
+
+
+
+
+
+	local MobileAim = AimTab:CreateToggle({
+		Name = "Aimbot Enable on Mobile",
+		CurrentValue = false,
+		Flag = "MobileAimbot", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(isHolding)
+
+			holdingBind = isHolding
+			if holdingBind and aimbotEnabled then
+				aimAtTarget()
+			end
+		end,
+	})
+
+	local Keybind = AimTab:CreateKeybind({
+		Name = "Aimbot Bind For PC",
+		CurrentKeybind = "Q",
+		HoldToInteract = true,
+		Flag = "Keybind1",
+		Callback = function(isHolding)
+			holdingBind = isHolding
+			if holdingBind and aimbotEnabled then
+				aimAtTarget()
+			end
+		end,
+	})
+
+-- Add to your Aimbot tab
+local triggerbotEnabled = false
+local TriggerbotToggle = AimTab:CreateToggle({
+    Name = "Smart Triggerbot",
+    CurrentValue = false,
+    Flag = "TriggerbotToggle",
+    Callback = function(Value)
+        triggerbotEnabled = Value
+    end,
+})
+
+-- Enhanced visibility check
+local function hasClearShot(targetPart)
+    if not targetPart then return false end
+    
+    local cameraPos = camera.CFrame.Position
+    local targetPos = targetPart.Position
+    local direction = (targetPos - cameraPos).Unit
+    local distance = (targetPos - cameraPos).Magnitude
+
+    -- Arsenal-specific raycast setup
+    local rayParams = RaycastParams.new()
+    rayParams.FilterDescendantsInstances = {
+        LocalPlayer.Character,
+        workspace.Map,
+        workspace.Debris,
+        workspace.Effects
+    }
+    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+    rayParams.IgnoreWater = true
+
+    -- First check: Simple distance check
+    if distance > 500 then return false end  -- Max engagement distance
+
+    -- Second check: Precise raycast
+    local rayResult = workspace:Raycast(cameraPos, direction * distance, rayParams)
+    
+    -- Only return true if we hit the target or nothing at all
+    if rayResult then
+        local hitPart = rayResult.Instance
+        return hitPart:IsDescendantOf(targetPart.Parent)
+    end
+    
+    return true
+end
+
+-- Main triggerbot logic
+local function handleTriggerbot()
+    if not triggerbotEnabled then return end
+    if not aimbotEnabled then return end  -- Only works when aimbot is active
+    
+    local character = LocalPlayer.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid or humanoid.Health <= 0 then return end
+    
+    -- Get current weapon (Arsenal-specific)
+    local tool = character:FindFirstChildOfClass("Tool")
+    if not tool then return end
+    
+    -- Get aimbot's current target
+    local targetPlayer = getClosestPlayer()
+    if not targetPlayer or not targetPlayer.Character then return end
+    
+    local targetPart = targetPlayer.Character:FindFirstChild(targetPartOption or "Head")
+    if not targetPart then return end
+    
+    -- Only shoot if we have clear line of sight
+    if hasClearShot(targetPart) then
+        -- Mobile/PC compatible firing
+        if tool:FindFirstChild("Remote") then
+            tool.Remote:FireServer("Fire", true)
+        elseif tool:FindFirstChild("Shoot") then
+            tool.Shoot:FireServer()
+        end
+        
+        -- Small delay to prevent machine-gun firing
+        task.wait(0.1)
+    end
+end
+
+-- Connect to render loop
+RunService.RenderStepped:Connect(handleTriggerbot)
+	local ToggleFOV = AimTab:CreateToggle({
+		Name = "FOV Visibility",
+		CurrentValue = false,
+		Flag = "ToggleFOV",
+		Callback = function(Value)
+			fovEnabled = Value
+			fovCircle.Visible = fovEnabled
+		end,
+	})
+	local SliderFOV = AimTab:CreateSlider({
+		Name = "FOV Size",
+		Range = {10, 360},
+		Increment = 5,
+		Suffix = "px",
+		CurrentValue = 50,
+		Flag = "SliderFOV",
+		Callback = function(Value)
+			fovSize = Value
+			fovCircle.Radius = fovSize
+		end,
+	})
+
+	local DropdownTarget = AimTab:CreateDropdown({
+		Name = "Target Part",
+		Options = {"Head", "Torso", "HumanoidRootPart", "Random"},
+		CurrentOption = "Head",
+
+		MultipleOptions = false,
+		Flag = "DropdownTarget",
+		Callback = function(Options)
+			targetPartOption = Options[1]
+		end,
+	})
+
+
+
+	local SliderSens = AimTab:CreateSlider({
+		Name = "Sensitivity",
+		Range = {0, 100},
+		Increment = 1,
+		Suffix = "%",
+		CurrentValue = 100,
+		Flag = "SliderSens",
+		Callback = function(Value)
+			sensitivity = Value
+		end,
+	})
+
+
+
+
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    local selectedPart = targetPartOption
+    
+    if selectedPart == "Random" then
+        local parts = {"Head", "Torso", "HumanoidRootPart"}
+        selectedPart = parts[math.random(1, #parts)]
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Skip if it's the local player or if the player has no character
+        if player == LocalPlayer or not player.Character or not player.Character:FindFirstChild(selectedPart) then
+            continue
+        end
+
+        -- Team check logic (FIXED)
+        if teamCheckEnabled then
+            -- Skip if the player is on the same team
+            if player.Team and LocalPlayer.Team and (player.Team == LocalPlayer.Team) then
+                continue
+            end
+        end
+
+        -- Calculate distance and check if player is in FOV
+        local part = player.Character:FindFirstChild(selectedPart)
+        local screenPos, onScreen = camera:WorldToViewportPoint(part.Position)
+        
+        if onScreen then
+            local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+            -- Only consider players within FOV (if FOV is enabled)
+            if (not fovEnabled) or (distance <= fovCircle.Radius) then
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+    
+    return closestPlayer
+end
+
+	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+		if gameProcessedEvent then return end
+		if input.KeyCode == Enum.KeyCode.Q then
+			if aimbotEnabled then
+				aimAtTarget()
+			end
+		end
+	end)
+
+	RunService.RenderStepped:Connect(function()
+		fovCircle.Position = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+		if holdingBind and aimbotEnabled then
+			aimAtTarget()
+		end
+	end)
+
+
+
+
+
+
+
+	local INFToggle = Tab:CreateToggle({
+		Name = "INF Jump (BETA)",
+		CurrentValue = false,
+		Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			local InfiniteJumpEnabled = Value
+
+			game:GetService("UserInputService").JumpRequest:Connect(function()
+				if InfiniteJumpEnabled then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+				end
+			end)
+		end,
+	})
+
+
+	local walkspeedEnabled = false
+	local freezeEnabled = false
+
+	local player = game.Players.LocalPlayer.Character
+
+	local WalkSpeedSlider = PlayerTab:CreateSlider({
+		Range = {16, 1234},
+		Increment = 10,
+		Suffix = "WalkSpeed",
+		CurrentValue = 16,
+		Flag = "SliderRun", 
+		Callback = function(Value)
+			while walkspeedEnabled do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+			end
+			while walkspeedEnabled == false do
+				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+			end
+		end,
+	})	
+
+
+
+	local WalkToggle = PlayerTab:CreateToggle({
+		Name = "Toggle Walkspeed",
+		CurrentValue = false,
+		Flag = "Toggle91", 
+		Callback = function(Value)
+			walkspeedEnabled = Value
+		end,
+	})
+
+	local ToggleFreeze = Tab:CreateToggle({ 
+		Name = "Toggle Freeze",
+		CurrentValue = false,
+		Flag = "Toggle2",
+		Callback = function(Value)
+			freezeEnabled = Value
+			if freezeEnabled then
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+			else
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+			end
+		end,
+	})
+
+
+
+	local VisualSection = AimTab:CreateSection("Visuals")
+
+
+
+	local aj = loadstring(game:HttpGet("https://rawscript.vercel.app/api/raw/esp_1"))()
+
+	aj.Boxes = true
+	aj.Players = true
+	aj.TeamColor = true
+
+	local EnableESPBich = Tab:CreateToggle({
+		Name = "ESP",
+		CurrentValue = false,
+		Flag = "ESPEnable", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			aj.Enabled = Value
+		end,
+	})
+
+	local ESPFaceCamera = Tab:CreateToggle({
+		Name = "ESP Face Camera",
+		CurrentValue = false,
+		Flag = "ESPFaceCamera", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			aj.FaceCamera = Value
+		end,
+	})
+
+
+	local ESPTeamCheck = Tab:CreateToggle({
+		Name = "TeamCheck",
+		CurrentValue = false,
+		Flag = "ESP TeamCheck", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait(0.3) do
+				if Value == false then
+					aj.TeamMates = true
+				else
+					aj.TeamMates = false
+				end
+			end
+
+		end,
+	})
+
+	local ESPTRacersCheck = Tab:CreateToggle({
+		Name = "Tracers",
+		CurrentValue = false,
+		Flag = "ESP Tracers", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			while wait() do 
+				aj.ESP.Tracers = Value
+				aj.Vis6 = Value
+			end
+		end,
+	})
+
+	Tab:CreateButton({Name="Name ESP",Callback=function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP"))();
+	end,
+	})
+
+
+	local function getplrsname()
+		for i, v in pairs(game:GetChildren()) do
+			if v.ClassName == "Players" then
+				return v.Name
+			end
+		end
+	end
+
+	local SilentEnabled = false
+
+	local function enableSilentAim()
+		SilentEnabled = not SilentEnabled
+		if SilentEnabled then
+			local players = getplrsname()
+			local plr = game[players].LocalPlayer
+
+			coroutine.resume(coroutine.create(function()
+				while SilentEnabled and wait(1) do
+					coroutine.resume(coroutine.create(function()
+						for _, v in pairs(game[players]:GetPlayers()) do
+							if v.Name ~= plr.Name and v.Character then
+								v.Character.RightUpperLeg.CanCollide = false
+								v.Character.RightUpperLeg.Transparency = 10
+								v.Character.RightUpperLeg.Size = Vector3.new(14, 14, 14)
+
+								v.Character.LeftUpperLeg.CanCollide = false
+								v.Character.LeftUpperLeg.Transparency = 10
+								v.Character.LeftUpperLeg.Size = Vector3.new(14, 17, 17)
+
+								if v.Character:FindFirstChild("HeadHB") then
+									v.Character.HeadHB.CanCollide = false
+									v.Character.HeadHB.Transparency = 10
+									v.Character.HeadHB.Size = Vector3.new(17, 17, 17)
+								end
+
+								v.Character.HumanoidRootPart.CanCollide = false
+								v.Character.HumanoidRootPart.Transparency = 10
+								v.Character.HumanoidRootPart.Size = Vector3.new(14, 14, 14)
+							end
+						end
+					end))
+				end
+			end))
+		end
+	end
+
+	local SilentToggle = AimTab:CreateToggle({
+		Name = "Toggle Silent Aim",
+		Callback = function()
+			enableSilentAim()
+			Rayfield:Notify({
+				Title = SilentEnabled and "Silent Aim Enabled" or "Silent Aim Disabled",
+				Content = SilentEnabled and "Silent aim functionality has been activated." or "Silent aim functionality has been deactivated.",
+				Duration = 5,
+				Image = 4483362458
+			})
+		end
+	})
+
+
+
+	local SettingTab = Window:CreateTab("Settings", "settings")
+
+	local SettingSection = SettingTab:CreateSection("Settings")
+
+	local CloseButton = SettingTab:CreateButton({
+		Name = "Close Advancer Z Entirelly",
+		Callback = function()
+			Rayfield:Destroy()
+		end,
+	})
+
+	local ThemeSection = SettingTab:CreateSection("Themes")
+
+	local AmethystButton = SettingTab:CreateButton({
+		Name = "Amethyst",
+		Callback = function()
+			Window.ModifyTheme('Amethyst')
+		end,
+	})
+
+	local OceanButton = SettingTab:CreateButton({
+		Name = "Ocean",
+		Callback = function()
+			Window.ModifyTheme('Ocean')
+		end,
+	})
+
+	local GreenButton = SettingTab:CreateButton({
+		Name = "Green(Basically WHITE)",
+		Callback = function()
+			Window.ModifyTheme('Green')
+		end,
+	})
+
+	local GreenButton = SettingTab:CreateButton({
+		Name = "My Custom Theme(All together in one)",
+		Callback = function()
+			Window.ModifyTheme{
+				TextColor = Color3.fromRGB(230, 230, 230),
+
+				Background = Color3.fromRGB(20, 30, 30),
+				Topbar = Color3.fromRGB(25, 40, 40),
+				Shadow = Color3.fromRGB(15, 20, 20),
+
+				NotificationBackground = Color3.fromRGB(25, 35, 35),
+				NotificationActionsBackground = Color3.fromRGB(230, 240, 240),
+
+				TabBackground = Color3.fromRGB(40, 60, 60),
+				TabStroke = Color3.fromRGB(50, 70, 70),
+				TabBackgroundSelected = Color3.fromRGB(100, 180, 180),
+				TabTextColor = Color3.fromRGB(210, 230, 230),
+				SelectedTabTextColor = Color3.fromRGB(20, 50, 50),
+
+				ElementBackground = Color3.fromRGB(45, 30, 60),
+				ElementBackgroundHover = Color3.fromRGB(50, 35, 70),
+				SecondaryElementBackground = Color3.fromRGB(40, 30, 55),
+				ElementStroke = Color3.fromRGB(70, 50, 85),
+				SecondaryElementStroke = Color3.fromRGB(65, 45, 80),
+
+				SliderBackground = Color3.fromRGB(100, 60, 150),
+				SliderProgress = Color3.fromRGB(130, 80, 180),
+				SliderStroke = Color3.fromRGB(150, 100, 200),
+
+				ToggleBackground = Color3.fromRGB(45, 30, 55),
+				ToggleEnabled = Color3.fromRGB(120, 60, 150),
+				ToggleDisabled = Color3.fromRGB(94, 47, 117),
+				ToggleEnabledStroke = Color3.fromRGB(140, 80, 170),
+				ToggleDisabledStroke = Color3.fromRGB(124, 71, 150),
+				ToggleEnabledOuterStroke = Color3.fromRGB(90, 40, 120),
+				ToggleDisabledOuterStroke = Color3.fromRGB(80, 50, 110),
+
+				DropdownSelected = Color3.fromRGB(30, 60, 60),
+				DropdownUnselected = Color3.fromRGB(25, 40, 40),
+
+				InputBackground = Color3.fromRGB(30, 50, 50),
+				InputStroke = Color3.fromRGB(80, 50, 110),
+				PlaceholderColor = Color3.fromRGB(150, 150, 160)
+			}
+		end,
+	})
+
+	local InfoTab = Window:CreateTab("Info", "scroll-text")
+
+	local Create = InfoTab:CreateLabel("Creators", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+	local UILabel = InfoTab:CreateLabel("UI Library: Rayfield  Made by Sirius", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+	local CopyYTButton = InfoTab:CreateButton({
+		Name = "Copy YT Link",
+		Callback = function()
+			setclipboard("https://www.youtube.com/@Einstein_V2")
+		end,
+	})
+
+	local CopyDisButton = InfoTab:CreateButton({
+		Name = "Copy Discord Server Link",
+		Callback = function()
+			setclipboard("https://discord.gg/pS3FqVGH")
+		end,
+	})
+
+	local CopyGitButton = InfoTab:CreateButton({
+		Name = "Copy Github Account Link",
+		Callback = function()
+			setclipboard("https://github.com/Tech4MechHubDev")
+		end,
+	})
+
+	local ChangeTab = Window:CreateTab("ChangeLog", "scroll-text")
+
+	local OnepointSevenChange = ChangeTab:CreateLabel("V2.0 (RELEASE)", 4483362458, Color3.fromRGB(1, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+	local OnePointSevenLabel = ChangeTab:CreateLabel("V2.0: Added everything (RELEASE)", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
+
+
 
 end
