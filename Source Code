@@ -849,8 +849,6 @@ end
 
 
 
-
-
 if Game == FortorID then
 
 	Injected = true
@@ -1622,10 +1620,8 @@ end
 
 end
 
-
-
-
-if Injected == false and Game == FortorID then do
+wait(0.2)
+if Injected == false then do
 
 
 	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/AlwaysAdvancing/Advancer-Z-V2/refs/heads/main/UI%20Library",true))()
@@ -3413,6 +3409,4 @@ if Injected == false and Game == FortorID then do
 	local CreateLabel = InfoTab:CreateLabel("Script Made By Ocean_Water on Discord", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
 
 	local UILabel = InfoTab:CreateLabel("UI Library: Rayfield  Made by Sirius", 4483362458, Color3.fromRGB(255, 255, 255), false) -- Title, Icon, Color, IgnoreTheme
-
-
 end
