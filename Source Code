@@ -512,7 +512,6 @@ end)
     		Flag = "TeamCheckToggle",
     		Callback = function(Value)
         		teamCheckEnabled = Value
-			end
     		end,
 	})
 
