@@ -514,6 +514,16 @@ local function hasClearShot(targetPart)
     return true
 end
 
+-- UI Toggle for Team Check
+local TeamCheckToggle = AimTab:CreateToggle({
+    Name = "Team Check (Ignore Teammates)",
+    CurrentValue = false,
+    Flag = "TeamCheckToggle",
+    Callback = function(Value)
+        teamCheckEnabled = Value
+    end,
+})
+
 -- Main triggerbot logic
 local function handleTriggerbot()
     if not triggerbotEnabled then return end
