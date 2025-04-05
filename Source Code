@@ -30,7 +30,7 @@ local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alwa
 
 
 	local Window = Rayfield:CreateWindow({
-    		Name = LocalPlayer.Name .. " | Advancer Z (Arsenal) (V 2.0)", -- Now correctly displays "PlayerName | Advancer Z..."
+		Name = "Welcome" .. LocalPlayer.Name .. " | 🔫 Advancer Z v2.0",  -- Adds an emoji!
     		Icon = 1,
     		LoadingTitle = "Advancer Z Load",
     		LoadingSubtitle = "by Ocean_Water on Discord",
